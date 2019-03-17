@@ -10,7 +10,7 @@ class MIADI_EtiquetteLabelModel(models.Model):
     code = fields.Char(string="Code", required=True)
     name = fields.Char(string="Name", required=True)
     file = fields.Char(sting="File", required=True,help="Path of the label file")
-	text = fields.Text(string="Label text", required=False, help="Paste here copy of label text")
+    text = fields.Text(string="Label text", required=False, help="Paste here copy of label text")
     commentary = fields.Text(string="Commentary")
     with_ean128 = fields.Boolean(string='Label with EAN128', default=False)
     
