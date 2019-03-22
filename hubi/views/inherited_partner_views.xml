@@ -38,6 +38,7 @@
                 -->
                 <xpath expr="//field[@name='category_id']" position="after">
                     <!--<field name="sender_establishment" domain="[('is_company','=',1)]"  />-->
+                    <field name="company_name"/>
                     <field name="cee_code"/> 
                     <field name="customer"/>
                     <field name="supplier"/>  

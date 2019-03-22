@@ -30,8 +30,8 @@
                     <group>
                         <group>
                             <field name="code"/>
-                            <field name="file"/>
-							<field name="text"/>
+                            <!-- field name="file"/ -->
+                            <field name="text"/>
                             <field name="with_ean128"/>
                         </group>
                     </group>
