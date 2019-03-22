@@ -3,14 +3,16 @@
 from odoo import models,fields,api
 #from . import models,wizards
 import os, sys
-#import win32print
+#FPimport win32print
+#from pycups import cups
 
 
-def printlabelonwindows(printer,labelmodelfile,charSep,parameters):
-    contenu = "";
-    with open(labelmodelfile) as fichierEtiq:
-        for line in fichierEtiq:
-            contenu += line + "\r\n"
+#FP20190318 def printlabelonwindows(printer,labelmodelfile,charSep,parameters):
+def printlabelonwindows(self,printer,labeltext,charSep,parameters):
+    contenu = labeltext #"";
+    #FP20190318 with open(labelmodelfile) as fichierEtiq:
+    #    for line in fichierEtiq:
+    #        contenu += line + "\r\n"
     
     for paramName,value in parameters:
            
@@ -25,8 +27,16 @@ def printlabelonwindows(printer,labelmodelfile,charSep,parameters):
         raw_data = bytes(contenu,"utf-8")
     else:
         raw_data = contenu
-      
-      
+
+    printing_vals = {
+        'printer_name': printer,
+        'label_text': contenu,
+        'count': 1,
+        'printed': False,
+    }  
+    self.env['hubi.printing'].create(printing_vals)
+    
+    #FP
     #hPrinter = win32print.OpenPrinter (printer)
     #try:
     #    hJob = win32print.StartDocPrinter(hPrinter, 1, ("print", None, "RAW"))
