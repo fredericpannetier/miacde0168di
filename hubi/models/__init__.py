@@ -31,4 +31,4 @@ from . import wiz_create_print_label
 from . import controller_export_csv_order_line
 #from . import export_csv_order_line
 from . import wiz_transfert_compta
-
+from . import printing

@@ -166,12 +166,13 @@ def _is_Visible_class(self, origin):
 
 @api.model
 def prepareprintlabel(self, nom_table, id_table):
+        #FP20190318 Remplacement l.file par l.text et sl.pds par case ...sl.pds / sl.qte end
         query = """SELECT to_char(sl.packaging_date,'DD/MM/YYYY'), to_char(sl.sending_date,'DD/MM/YYYY'), 
                     pt.etiq_description, pc.complete_name, 
                     hfc.name, hfp.name, pt.etiq_mention, 
                     sl.code_barre, sl.code_128, sl.qte,  
                     case sl.qte when 0 then sl.pds else sl.pds/sl.qte end,
-                    sl.nb_mini, p.realname, p.adressip,l.file,
+                    sl.nb_mini, p.realname, p.adressip,l.text,
                     t.customer_name_etiq, t.customer_city_etiq, 
                     etab.health_number, etab.company_name_etiq, etab.company_city_etiq, etab.etiq_mention,
                     sl.numlot, sl.color_etiq, pt.etiq_latin, pt.etiq_spanish, pt.name, 
@@ -191,7 +192,7 @@ def prepareprintlabel(self, nom_table, id_table):
         
         result = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28]) for r in self.env.cr.fetchall()]
         
-        for packaging_date,sending_date,product_description, category_name,caliber_name,packaging_name,etiq_mention,code_barre,code128,qte,pds,nb_mini,printerName,adressip,labelFile,clientname1,clientname2,numsanitaire,etabexp1,etabexp2,etab_mention,lot,color,etiq_latin,etiq_spanish,product_name,with_ean128,compteur_ean128, etab_id in result:
+        for packaging_date,sending_date,product_description,category_name,caliber_name,packaging_name,etiq_mention,code_barre,code128,qte,        pds,nb_mini,printerName,adressip,labelFile,clientname1,clientname2,numsanitaire,etabexp1,etabexp2,etab_mention,lot,color,etiq_latin,        etiq_spanish,product_name,with_ean128,compteur_ean128, etab_id in result:
             if (product_description is not None):
                 description_item = product_description
             else:
@@ -225,12 +226,13 @@ def prepareprintlabel(self, nom_table, id_table):
                 ("color", color)]
             
             if(printerName is not None and printerName != "" and labelFile is not None and labelFile != ""):
-                if (adressip is not None and adressip != ""):
-                    printer = "\\\\" + adressip + "\\" + printerName
-                else:
-                    printer = printerName
+                printer = printerName
+                #FP20190318 if (adressip is not None and adressip != ""):
+                #    printer = "\\\\" + adressip + "\\" + printerName
+                #else:
+                #    printer = printerName
                     
-                ctrl_print.printlabelonwindows(printer,labelFile,'[',informations)   
+                ctrl_print.printlabelonwindows(self,printer,labelFile,'[',informations)   
 
                 # Update counter of barcode 128
                 if with_ean128:

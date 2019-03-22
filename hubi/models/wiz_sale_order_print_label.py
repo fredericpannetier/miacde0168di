@@ -101,6 +101,7 @@ class wizard_sale_order_print_label(models.Model):
         
         self.env.cr.commit()
         params = [tuple(active_ids)]
+        #FP20190318 Remplacement ???? sl.pds par case ...sl.pds / sl.qte end
         query = """SELECT o.id, o.name,ol.id as line_id,o.packaging_date, o.sending_date, ol.product_id, p.default_code, ol.product_uom_qty, ol.weight,
                     categ.name, cond.name, ol.no_lot, 
                     t.id, etab.id, t.etiq_printer, t.label_model_id, t.customer_color_etiq,
@@ -283,12 +284,13 @@ class wizard_sale_order_print_label(models.Model):
                 ("color", color)]
             
             if(printerName is not None and printerName != "" and labelFile is not None and labelFile != ""):
-                if (adressip is not None and adressip != ""):
-                    printer = "\\\\" + adressip + "\\" + printerName
-                else:
-                    printer = printerName
+                printer = printerName
+                #20190318 if (adressip is not None and adressip != ""):
+                #    printer = "\\\\" + adressip + "\\" + printerName
+                #else:
+                #    printer = printerName
                     
-                ctrl_print.printlabelonwindows(printer,labelFile,'[',informations)    
+                ctrl_print.printlabelonwindows(self,printer,labelFile,'[',informations)    
         
     @api.multi
     def print_line(self,id):  

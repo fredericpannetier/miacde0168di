@@ -183,9 +183,10 @@ class Wizard_create_print_label(models.TransientModel):
     @api.multi
     def create_print_label_old(self):  
         self.env.cr.commit()
+        #FP20190318 Remplacement l.file par l.text et sl.pds par case ...sl.pds / sl.qte end
         query = """SELECT to_char(sl.packaging_date,'DD/MM/YYYY'), to_char(sl.sending_date,'DD/MM/YYYY'), pt.etiq_description, hfc.name, hfp.name,
                     pt.etiq_mention, 
-                    sl.code_barre, sl.qte, sl.pds, sl.nb_mini, p.realname, p.adressip,l.file,
+                    sl.code_barre, sl.qte, case sl.qte when 0 then sl.pds else sl.pds/sl.qte end, sl.nb_mini, p.realname, p.adressip,l.text,
                     t.customer_name_etiq, t.customer_city_etiq, etab.health_number, etab.company_name_etiq, etab.company_city_etiq, 
                     sl.numlot, sl.color_etiq, pt.etiq_latin, pt.etiq_spanish
                     FROM wiz_create_print_label sl
@@ -225,12 +226,13 @@ class Wizard_create_print_label(models.TransientModel):
                 ("color", color)]
             
             if(printerName is not None and printerName != "" and labelFile is not None and labelFile != ""):
-                if (adressip is not None and adressip != ""):
-                    printer = "\\\\" + adressip + "\\" + printerName
-                else:
-                    printer = printerName
+                printer = printerName
+                #FP20190318 if (adressip is not None and adressip != ""):
+                #    printer = "\\\\" + adressip + "\\" + printerName
+                #else:
+                #    printer = printerName
                     
-                ctrl_print.printlabelonwindows(printer,labelFile,'[',informations)    
+                ctrl_print.printlabelonwindows(self,printer,labelFile,'[',informations)    
 
         return {'type': 'ir.actions.act_window_close'} 
     

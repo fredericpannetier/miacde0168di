@@ -3,23 +3,25 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import os, sys
-#import win32print
+#FPimport win32print
 from ..controllers import ctrl_print
 #from controllers import ctrl_print
+#from pycups import cups
 
 class wizard_printlabel(models.TransientModel):
     _name = "wiz_print_label"
     _description = "Wizard print label"
     
-    printer_id = fields.Many2one("hubi.printer", required=True)
-    label_id = fields.Many2one("hubi.labelmodel", required=True)
+    printer_id = fields.Many2one("hubi.printer", required=False) #FP20190313 False pour compilation
+    label_id = fields.Many2one("hubi.labelmodel", required=False)
     #message = fields.Text(string="Information")
     
 
     def print_label(self):
         
-        printerName = "\\\\" + self.printer_id.adressip + "\\" + self.printer_id.realname
-        labelFile = self.label_id.file
+        #FP20190318 printerName = "\\\\" + self.printer_id.adressip + "\\" + self.printer_id.realname
+        printerName = self.printer_id.name
+        labelFile = self.label_id.text #FP20190318 avant .file
         
         
         
@@ -27,7 +29,7 @@ class wizard_printlabel(models.TransientModel):
         
 
         
-        ctrl_print.printlabelonwindows(printerName,labelFile,'[',test)
+        ctrl_print.printlabelonwindows(self,printerName,labelFile,'[',test)
         #return {'type': 'ir.actions.act_window_close'}       
         
         return {'type': 'ir.actions.act_window_close'}  

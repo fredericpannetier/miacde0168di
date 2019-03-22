@@ -9,7 +9,7 @@ class MIADI_EtiquettePrinter(models.Model):
     
     code = fields.Char(string="Code", required=True)
     name = fields.Char(string="Name", required=True)
-    realname = fields.Char(string="Windows name")
+    realname = fields.Char(string="Windows or Cups name")
     adressip = fields.Char(string="IP Adress")
     port = fields.Integer(string="Port")
     commentary = fields.Text(string="Commentary")
