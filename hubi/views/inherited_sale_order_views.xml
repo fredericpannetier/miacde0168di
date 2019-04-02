@@ -15,6 +15,11 @@
                 class="oe_button oe_form_button oe_highlight" 
                 attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])]}"/>  
                 
+                
+                <button name="action_print_label" type="object" string="Print Label"  
+                class="oe_button oe_form_button oe_highlight" />
+                
+                
                 <!-->
                 <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
                 <button name="sale_order_lines_csv" type="object" string="CSV" context="{'order_id': id, 'partner_name': partner_id}" class="oe_button oe_form_button oe_highlight" />
@@ -97,7 +102,18 @@
             </xpath>
             <xpath expr="//group[@name='sales_person']" position="after">
                 <group string="Other Information" name="sale_info">
+                    <label for="sending_date"/>
+                    <div class="o_row">
                     <field name="sending_date" />
+                    <button
+                        type="action"
+                        name="%(action_wiz_confirm_dialog)d"
+                        class="btn-xs btn-link mb4 fa fa-lightbulb-o"
+                        attrs="{'invisible': True}"
+                        context="{'default_confirm_message': 'Are you sure you want to update the batch number for the lines', 
+                            'default_code_message': 'sale_batch-number'}"
+                        />
+                    </div>    
                     <field name="packaging_date"/>
                     <field name="pallet_number"/>
                 </group>
@@ -136,28 +152,7 @@
     <record id="sale.action_quotations" model="ir.actions.act_window">
         <field name="context">{'search_default_draft': 1, 'search_default_sent': 1}</field>
     </record>
-<!-->
-   <act_window
-        id="action_wiz_print_label_sale"
-        name="Print sale label"
-        res_model="wiz.print.label.sale"
-        src_model="sale.order"
-        view_mode="form"
-        view_type="form"
-        target="new"
-        view_id="print_label_from_sale">    
-    </act_window>
- --> 
-        <!-- <act_window
-            id="action_wiz_print_label"
-            name="Print Label"
-            res_model="wiz_print_label"
-            src_model="sale.order"
-            view_mode="form"
-            view_type="form"
-            target="new"
-            view_id="wiz_print_label_view">    
-        </act_window>  -->
+
         
         <act_window
             id="action_wiz_print_label_sale"
@@ -173,7 +168,7 @@
             target="new"
             view_id="wiz_confirm_dialog_form">    
         </act_window>
-        
+
         <!-- <act_window
             id="action_wiz_print_label_sale"
             multi="True"
@@ -186,5 +181,18 @@
             target="new"
             view_id="wiz_prepare_sale_order_print_label">    
         </act_window> --> 
+        
+        <record id="action_email_sale_order_send_server" model="ir.actions.server">
+            <field name="name">Email: Send email</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.sale_order_send_email()
+            </field>
+    </record>
+    
     </data>
 </odoo>

@@ -93,6 +93,8 @@
                                 <field name="etiq_description" attrs="{'invisible': [('is_etiq_prod_libelle', '=', False)]}" />
                                 <field name="etiq_latin"  attrs="{'invisible': [('is_etiq_prod_lib_latin', '=', False)]}"/>
                                 <field name="etiq_spanish"  attrs="{'invisible': [('is_etiq_prod_lib_espagnol', '=', False)]}"/>
+                                <field name="etiq_country1" />
+                                <field name="etiq_country2" />
                             </group>
 
                         </group>
