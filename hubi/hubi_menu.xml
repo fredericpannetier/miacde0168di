@@ -9,6 +9,8 @@
 				<menuitem id="menu_hubi_sale_orders" sequence="20" parent="menu_hubi_sales_documents" action="sale.action_orders"  />
 				<menuitem id="menu_hubi_sale_orders_invoice" sequence="30" parent="menu_hubi_sales_documents" action="sale.action_orders_to_invoice"  />
 				<menuitem id="menu_hubi_sale_orders_create_invoice" sequence="40" parent="menu_hubi_sales_documents" action="hubi.action_hubi_create_invoiceperiod"  />
+                <menuitem id="menu_hubi_packing_preparation" sequence="50" parent="menu_hubi_sales_documents" action="hubi.action_hubi_packing_preparation"  />
+                
 			<menuitem id="menu_hubi_sales_reports" name="Reports" parent="menu_hubi_sales" sequence="2"/>
 				<menuitem id="menu_hubi_sale_analysis_report" name="Sale Order Analysis" sequence="10" parent="menu_hubi_sales_reports" />
 					<menuitem id="menu_hubi_sale_order_report_price" name="Analysis Price" sequence="10" parent="menu_hubi_sale_analysis_report" action="sale.action_order_report_all"  />
@@ -50,9 +52,9 @@
 					<menuitem id="menu_hubi_invoice_report_detail" name="Analysis Detail" sequence="30" parent="menu_hubi_invoice_report" action="hubi.action_hubi_invoice_report_detail"  />
 					<menuitem id="menu_hubi_invoice_report_free" name="Analysis free Product" sequence="40" parent="menu_hubi_invoice_report" action="hubi.action_hubi_invoice_report_free"  />
 
-                <menuitem id="menu_hubi_invoice_list" name="Invoice List" sequence="30" parent="menu_hubi_report_billing" />
+                <!--<menuitem id="menu_hubi_invoice_list" name="Invoice List" sequence="30" parent="menu_hubi_report_billing" />
                     <menuitem id="menu_hubi_invoice_list_customer" name="Customer Invoice List" sequence="10" parent="menu_hubi_invoice_list" action="hubi.action_send_email_invoice_customer"  />
-				
+				-->
 				<!-- Partie comptable en commentaire FP20190128
 				<menuitem id="menu_hubi_account_report" name="Account Report" sequence="40" parent="menu_hubi_report_billing" />
 					<menuitem id="menu_hubi_FEC_report" sequence="10" parent="menu_hubi_account_report" action="l10n_fr_fec.account_fr_fec_action"  />
@@ -122,7 +124,7 @@
             <menuitem id="menu_hubi_module_option" name="Module_option" sequence="10" parent="menu_hubi_config"  action="hubi.action_hubi_module_option" />
             <menuitem id="menu_hubi_config_parameter" name="Configuration Parameter" sequence="20" parent="menu_hubi_config"  action="base_setup.action_general_configuration" />
             <menuitem id="menu_hubi_general_settings" name="General Settings" sequence="30" parent="menu_hubi_config"  action="hubi.action_hubi_general_setting" />
-     
+            <menuitem id="menu_hubi_sent_mail" name="Sent mails" sequence="40" parent="menu_hubi_config"  action="mail.action_view_mail_mail" />
 
     <record id="make_invisible" model="res.groups">
         <field name="name">Invisible</field>
