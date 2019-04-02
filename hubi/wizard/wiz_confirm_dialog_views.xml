@@ -21,6 +21,7 @@
 				    <button name= "wiz_update_product_etiq" string="OK"  type="object" attrs="{'invisible': [('code_message', '!=', 'label-etiq')]}" class="oe_link"/>
 				    <button name= "wiz_create_credit_note" string="OK"  type="object" attrs="{'invisible': [('code_message', '!=', 'create-credit_note')]}" class="oe_link"/>
 					<button name= "wiz_prepare_order_line_print_label" string="OK"  type="object" attrs="{'invisible': [('code_message', '!=', 'sale_order_print_label')]}" class="oe_link"/>
+					<button name= "wiz_update_sale_batch_number" string="OK"  type="object" attrs="{'invisible': [('code_message', '!=', 'sale_batch-number')]}" class="oe_link"/>
 					<button string="Cancel" special="cancel" class="oe_link"/>
 				</footer>
 			</form>

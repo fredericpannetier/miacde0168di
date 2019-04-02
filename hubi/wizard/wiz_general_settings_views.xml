@@ -45,6 +45,13 @@
                     </group>
                 </group>
 
+                <separator string="Various"/>
+                <group>
+                    <group>
+                        <field name="calcul_lot"/>
+                    </group>
+                </group>
+                
                 <footer>
                     <button string="Validation" type="object" name="execute_update"
                         default_focus="1"  class="btn btn-primary"/>

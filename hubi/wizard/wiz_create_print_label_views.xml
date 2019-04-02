@@ -19,10 +19,11 @@
                     <group>
                         <group>
                             <field name="partner_id" domain="[('customer', '=', True), ('parent_id', '=', False)]"  />
+                            <field name="carrier_id" />
                         </group>
                         <group>
                             <field name="etabexp_id" domain="[('is_company','=',1), ('customer','=',False), ('supplier','=',False)]"/>
-                            <field name="health_number" />
+                            <field name="health_number" readonly="1" />
                             <field name="code_128"  />
                         </group>
                     </group>
