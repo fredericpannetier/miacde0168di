@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _,  SUPERUSER_ID
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 import time
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from datetime import date, timedelta, datetime   
-   
+import base64
+from ..controllers import ctrl_print
+
 class HubiSaleOrderLine(models.Model):
     _inherit = "sale.order.line"
        
@@ -97,7 +99,9 @@ class HubiSaleOrderLine(models.Model):
     price_weight = fields.Float(string='Price Weight ', store=True, readonly=True, compute='_compute_weight')
     comment = fields.Char(string='Comment')
     no_lot = fields.Char(string='Batch number')
-   
+    partner_id = fields.Many2one("res.partner", string='Customer')
+    done_packing = fields.Boolean(string='Packing Done')
+    sending_date = fields.Date(string="Sending Date", store=False, compute='_compute_date_sending' )
    
     @api.multi
     def invoice_line_create(self, invoice_id, qty):
@@ -109,7 +113,44 @@ class HubiSaleOrderLine(models.Model):
         })
         return invoice_line_vals  
     
+    @api.multi
+    def print_label(self):
+        #self.filtered(lambda s: s.state == 'draft').write({'state': 'sent'})
+        #return self.env.ref('hubi.report_orderline_label').report_action(self)
+        ##return {'type': 'ir.actions.report','report_name': 'report_saleorder_hubi_document','report_type':"qweb-pdf"}
+        sale_order_ids = self.env['wiz_sale_order_print_label'].browse(self.id)
+        res = sale_order_ids.load_order_line('order_line')
+        
+        if len(res) >= 1:
+            action = self.env.ref('hubi.action_wiz_sale_order_print_label_tree').read()[0]
+            action['domain'] = [('id', 'in', res)]
+            
+        return action
     
+    @api.multi
+    def validation(self, fields):
+        #Lorsque l'on appuie sur le bouton, la ligne n'est plus affichée sur la page
+        self.update({
+                'done_packing': True,
+                #'packaging_date':fields.Date.context_today(self),
+
+            })
+        return
+        #product_id = self.product_id.id
+        #order_id = self.order_id.id
+        #done = False
+        #self._cr.execute("UPDATE sale_order_line SET done_packing = True WHERE product_id=%s AND order_id=%s", (product_id, order_id))
+        #self.env.cr.commit()
+ 
+    @api.multi
+    def _compute_date_sending(self):
+        for line in self:
+            #line.sending_date = line.order_id.sending_date
+            line.update({
+                'sending_date': line.order_id.sending_date,
+                
+            })
+               
 class HubiSaleOrder(models.Model):
     _inherit = "sale.order"
 
@@ -268,6 +309,25 @@ class HubiSaleOrder(models.Model):
 
     #    }
      
+    @api.multi
+    def action_print_label(self):
+        #sale_order_ids = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        #sale_order_ids = self.id
+        #res = sale_order_ids.load_order_line()
+        
+        
+        #res = self.env['sale.order.line'].search([('order_id', '=', self.id)])
+        
+        sale_order_ids = self.env['wiz_sale_order_print_label'].browse(self._ids)
+        res = sale_order_ids.load_order_line('order')
+        
+        if len(res) >= 1:
+            action = self.env.ref('hubi.action_wiz_sale_order_print_label_tree').read()[0]
+            action['domain'] = [('id', 'in', res)]
+        
+            
+        return action  
+
      
         
     #shipper_id = fields.Many2one('hubi.shipper', string='Shipper')
@@ -353,7 +413,6 @@ class HubiSaleOrder(models.Model):
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
-                    
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
@@ -450,3 +509,96 @@ class HubiSaleOrder(models.Model):
         for order in self:
             order.check_limit()
         return res        
+    
+    @api.multi
+    def sale_order_send_email(self):
+        #raise UserError(_('Send email.'))
+        attachments_ids = []
+        Envoi = False
+        NbLig = len(self.ids)
+        CodePartner=999999
+        EMailPartner="z"
+        CptLig = 0
+        for ligne in self.sorted(key=lambda r: (r.partner_id.email, r.id)):
+            CptLig = CptLig + 1
+           
+            if ((ligne.partner_id.email != EMailPartner) and (EMailPartner != "z")) :
+                self.send_email(ligne,EMailPartner,attachments_ids)
+                Envoi = False
+                attachments_ids = []
+                
+            if ligne.partner_id.email:
+                CodePartner = ligne.partner_id.id
+                EMailPartner = ligne.partner_id.email
+                Envoi = True
+ 
+                #pdf = self.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([ligne.id])[0]
+                pdf = self.env.ref('hubi.action_report_saleorder_hubi').sudo().render_qweb_pdf([ligne.id])[0]
+                # attachment
+            
+                id_w = self.env['ir.attachment'].create({
+                    'name': 'Sale order'+(ligne.display_name)+"_"+str(ligne.id),
+                    'type': 'binary', 
+                    'res_id':ligne.id,
+                    'res_model':'sale.order',
+                    'datas':base64.b64encode(pdf),
+                    'mimetype': 'application/x-pdf',
+                    'datas_fname':ligne.display_name+'_'+str(ligne.id)+'.pdf'
+                    })
+                attachments_ids.append(id_w.id)
+            
+        if (Envoi):
+            self.send_email(ligne,EMailPartner,attachments_ids)  
+            #raise UserError(_('Email send.')) 
+        
+         #return True
+    
+    def send_email(self,ligne,email_to,attachments_ids):    
+        
+        #if not ligne.partner_id.email:
+        #    raise UserError(_("Cannot send email: partner %s has no email address.") % ligne.partner_id.name)
+        if email_to:
+            current_uid = self._context.get('uid')
+            su_id_current = self.env['res.partner'].browse(current_uid)
+            
+            su_id = self.env['res.partner'].browse(SUPERUSER_ID)
+            template_id = self.env['ir.model.data'].get_object_reference('hubi',  'email_template_sale_order')[1]
+            template_browse = self.env['mail.template'].browse(template_id)
+            #email_to = self.env['res.partner'].browse(ligne.partner_id).email
+            
+            if template_browse:
+                values = template_browse.generate_email(ligne.id, fields=None)
+                values['email_to'] = email_to
+                values['email_from'] = su_id_current.email 
+                #values['email_from'] = su_id.email
+                values['res_id'] = ligne.id   #False
+                if not values['email_to'] and not values['email_from']:
+                    pass
+                
+                values['attachment_ids'] = [(6, 0, attachments_ids)] #attachments_ids
+                                
+                mail_mail_obj = self.env['mail.mail']
+                msg_id = mail_mail_obj.create(values)
+                if msg_id:
+                    mail_mail_obj.send(msg_id) 
+    
+    @api.multi                
+    def update_sale_batch_number(self):
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', []) or []
+        _nolot =''
+        self.env.cr.commit()
+        
+        sending_date = self.sending_date
+        dateQQQ = datetime.strftime(sending_date, '%Y%j').date()
+        dateAAAAMMJJ = datetime.strptime(sending_date, '%Y%m%d').date()
+        
+        _nolot = dateQQQ
+        
+        order_lines = self.env['sale.order.line'].browse(self._context.get('active_ids', []))
+        for line in order_lines:
+            line.write({'no_lot':_nolot})
+        
+        
+        
+        return {'type': 'ir.actions.act_window_close'}

@@ -33,6 +33,7 @@ class wizard_sale_order_print_label(models.Model):
                                     ("#008000", "green"),("#D2691E", "brown"),
                                     ("#FFFFFF", "white"),("#CCCCCC", "grey"),
                                     ("#FFC0CB", "pink")], string='Color Etiq')
+    carrier_id = fields.Integer(string="Carrier ID")
     
     @api.model
     @api.multi
@@ -92,21 +93,21 @@ class wizard_sale_order_print_label(models.Model):
         self.update_wiz_table()
 
     @api.multi
-    def load_order_line(self):
+    def load_order_line(self, origin):
         user = self.env.user.id      
         self.delete_table_temp(user)        
                 
         context = dict(self._context or {})
-        active_ids = context.get('active_ids', []) or []
+        active_ids = context.get('active_ids', []) or self._ids or []
         
         self.env.cr.commit()
         params = [tuple(active_ids)]
         #FP20190318 Remplacement ???? sl.pds par case ...sl.pds / sl.qte end
-        query = """SELECT o.id, o.name,ol.id as line_id,o.packaging_date, o.sending_date, ol.product_id, p.default_code, ol.product_uom_qty, ol.weight,
+        query1 = """SELECT o.id, o.name,ol.id as line_id,o.packaging_date, o.sending_date, ol.product_id, p.default_code, ol.product_uom_qty, ol.weight,
                     categ.name, cond.name, ol.no_lot, 
                     t.id, etab.id, t.etiq_printer, t.label_model_id, t.customer_color_etiq,
                     pt.quantity,pt.etiq_printer, pt.label_model_id, pt.product_color, p.barcode,
-                    linepl.price_printer, linepl.label_model_id, linepl.price_color, linepl.price_ean13
+                    linepl.price_printer, linepl.label_model_id, linepl.price_color, linepl.price_ean13, o.carrier_id
                     FROM sale_order o 
                     INNER JOIN sale_order_line ol ON o.id = ol.order_id
                     INNER JOIN product_product p ON ol.product_id = p.id
@@ -117,16 +118,21 @@ class wizard_sale_order_print_label(models.Model):
                     LEFT JOIN hubi_family cond ON pt.packaging_id = cond.id 
                     LEFT JOIN ir_property prop ON (prop.res_id = concat('res.partner,', t.id) AND prop.value_reference like 'product.pricelist,_')
                     LEFT JOIN product_pricelist pricelist ON prop.value_reference = concat('product.pricelist,', pricelist.id)
-                    LEFT JOIN product_pricelist_item linepl ON (pricelist.id = linepl.pricelist_id AND pt.id = linepl.product_tmpl_id)
-                    WHERE o.id IN %s
-                    ORDER BY o.name """
+                    LEFT JOIN product_pricelist_item linepl ON (pricelist.id = linepl.pricelist_id AND pt.id = linepl.product_tmpl_id)"""
+
+        if origin == 'order':
+            query2 = """ WHERE o.id IN %s ORDER BY o.name """
+        else:
+            query2 = """ WHERE ol.id IN %s ORDER BY o.name """
+                
+        query = ''.join([query1, query2])
         
         self.env.cr.execute(query, tuple(params))
         list_orders_ids = []
         
-        ids = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25]) for r in self.env.cr.fetchall()]
+        ids = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26]) for r in self.env.cr.fetchall()]
         
-        for order_id, order_num, sale_order_line_id, packaging_date, sending_date, product_id, product_code, qte, weight, calibre, cond, lot, clientid, etabexpid, clientprinter, clientetiq, clientcolor, nbmini, prodprinter, prodetiq, prodcolor, prodcodbar, priceprinter, priceetiq, pricecolor, pricecodbar  in ids:
+        for order_id, order_num, sale_order_line_id, packaging_date, sending_date, product_id, product_code, qte, weight, calibre, cond, lot, clientid, etabexpid, clientprinter, clientetiq, clientcolor, nbmini, prodprinter, prodetiq, prodcolor, prodcodbar, priceprinter, priceetiq, pricecolor, pricecodbar, carrier  in ids:
             # Imprimante
             if (priceprinter is not None and priceprinter != ""):
                 printer = priceprinter
@@ -198,6 +204,7 @@ class wizard_sale_order_print_label(models.Model):
             'printer_id': printer,
             'label_id': etiq,
             'color_etiq':color,
+            'carrier_id':carrier,
             }
             prepare_print_label = self.env['wiz_sale_order_print_label'].create(insert)
             list_orders_ids.append(int(prepare_print_label.id))
@@ -209,6 +216,7 @@ class wizard_sale_order_print_label(models.Model):
         
         #return self.action_view_sale_order_line_print_label()
         #return {'type': 'ir.actions.act_window_close'}
+    
     
     @api.multi
     def print_label_from_order_old(self):
@@ -284,13 +292,12 @@ class wizard_sale_order_print_label(models.Model):
                 ("color", color)]
             
             if(printerName is not None and printerName != "" and labelFile is not None and labelFile != ""):
-                printer = printerName
-                #20190318 if (adressip is not None and adressip != ""):
-                #    printer = "\\\\" + adressip + "\\" + printerName
-                #else:
-                #    printer = printerName
+                if (adressip is not None and adressip != ""):
+                    printer = "\\\\" + adressip + "\\" + printerName
+                else:
+                    printer = printerName
                     
-                ctrl_print.printlabelonwindows(self,printer,labelFile,'[',informations)    
+                ctrl_print.printlabelonwindows(printer,labelFile,'[',informations)    
         
     @api.multi
     def print_line(self,id):  

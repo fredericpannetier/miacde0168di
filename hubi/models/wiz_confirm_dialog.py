@@ -13,6 +13,12 @@ class Wizard_confirm_dialog(models.TransientModel):
     code_message = fields.Text(string="Code Message")
     
     @api.multi
+    def wiz_update_sale_batch_number(self):
+        sale_ids = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        sale_ids.update_sale_batch_number()
+
+    
+    @api.multi
     def wiz_update_product_etiq(self):
         prod_ids = self.env['product.template'].browse(self._context.get('active_ids', []))
         prod_ids.update_product_etiq()
@@ -77,7 +83,7 @@ class Wizard_confirm_dialog(models.TransientModel):
     @api.multi
     def wiz_prepare_order_line_print_label(self):
         sale_order_ids = self.env['wiz_sale_order_print_label'].browse(self._context.get('active_ids', []))
-        res = sale_order_ids.load_order_line()
+        res = sale_order_ids.load_order_line('order')
         
         if len(res) >= 1:
             action = self.env.ref('hubi.action_wiz_sale_order_print_label_tree').read()[0]

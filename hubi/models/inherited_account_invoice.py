@@ -246,15 +246,14 @@ class HubiAccountInvoice(models.Model):
                 #    msg_id = mail_mail_obj.create(values)
                 #    if msg_id:
                 #        mail_mail_obj.send(msg_id)
-                
-                
         
             if ligne.partner_id.email:
                 CodePartner = ligne.partner_id.id
                 EMailPartner = ligne.partner_id.email
                 Envoi = True
  
-                pdf = self.env.ref('account.account_invoices').sudo().render_qweb_pdf([ligne.id])[0]
+                #pdf = self.env.ref('account.account_invoices').sudo().render_qweb_pdf([ligne.id])[0]
+                pdf = self.env.ref('hubi.account_invoices_hubi').sudo().render_qweb_pdf([ligne.id])[0]
                 # attachment
                 #attachments_ids = [(0, 0, {'name': 'Invoice'+(ligne.display_name),
                 #                                         'type': 'binary', 

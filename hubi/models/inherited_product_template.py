@@ -54,6 +54,8 @@ class HubiInheritedProductTemplate(models.Model):
     etiq_description = fields.Char(string='Etiq Description')
     etiq_latin = fields.Char(string='Etiq Latin')
     etiq_spanish = fields.Char(string='Etiq Spanish')
+    etiq_country1 = fields.Char(string='Etiq country 1')
+    etiq_country2 = fields.Char(string='Etiq country 2')
     etiq_format = fields.Selection([("1", "large"),("2", "small"),("3", "weight"),("4", "other")], string="Etiq Format")
     etiq_modele = fields.Selection([("1", "classic"),("2", "FD Taste of the quality"),
                                     ("3", "Taste of the quality"),("4", "carton")], string="Etiq Modele")

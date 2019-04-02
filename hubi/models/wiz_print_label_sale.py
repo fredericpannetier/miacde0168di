@@ -15,10 +15,11 @@ class wizard_printlabelsale(models.TransientModel):
     
     @api.multi
     def print_label(self):
-        
-        #FP20190318 printerName = "\\\\" + self.printer_id.adressIp + "\\" + self.printer_id.realName
+        #FP20190318 avant .file
+        #printerName = "\\\\" + self.printer_id.adressIp + "\\" + self.printer_id.realName
+        #labelFile = self.label_id.file
         printerName = self.printer_id.name
-        labelFile = self.label_id.text #FP20190318 avant .file
+        labelFile = self.label_id.text 
         informations = [("key1","value1"),("key2","value2"),("key3","value3")]
-        ctrl_print.printlabelonwindows(self,printerName,labelFile,'[',informations)
+        ctrl_print.printlabelonwindows(printerName,labelFile,'[',informations)
         return {'type': 'ir.actions.act_window_close'}  

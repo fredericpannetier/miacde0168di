@@ -26,6 +26,7 @@ class HubiGeneralSettings(models.Model):
     account_file_transfer = fields.Char(string='File For Account Transfer')
     writing_file_transfer = fields.Char(string='File For Writing Transfer')
     type_accounting = fields.Selection([('EBP', 'EBP')], string="Type of accounting", default='EBP')
+    calcul_lot = fields.Selection([('M', 'Manual'), ('AMJ', 'Auto AAAAMMJJ'), ('AQ', 'Auto AAAAQQQ')], string="Batch Number Calculation", default='M')
 
     _sql_constraints = [
         ('unique_name_company', 'unique(name, company_id)', 'Name must be unique for the company'),
@@ -49,7 +50,8 @@ class Wizard_GeneralSettings(models.TransientModel):
     complete_0_account_general = fields.Boolean(string='Complete right with 0 Account General', default=lambda self: self._get_values('complete_0_account_general'))
     account_file_transfer = fields.Char(string='File For Account Transfer', default=lambda self: self._get_values('account_file_transfer'))
     writing_file_transfer = fields.Char(string='File For Writing Transfer', default=lambda self: self._get_values('writing_file_transfer'))
-    type_accounting = fields.Selection([('EBP', 'EBP')], string="Type of accounting", default='EBP')
+    type_accounting = fields.Selection([('EBP', 'EBP')], string="Type of accounting", default=lambda self: self._get_values('type_accounting'))
+    calcul_lot = fields.Selection([('M', 'Manual'), ('AMJ', 'Auto AAAAMMJJ'), ('AQ', 'Auto AAAAQQQ')], string="Batch Number Calculation", default=lambda self: self._get_values('calcul_lot'))
 
     @api.model
     def _get_values(self, valeur):
@@ -69,6 +71,7 @@ class Wizard_GeneralSettings(models.TransientModel):
         val_account_file_transfer = ''
         val_writing_file_transfer = ''
         val_type_accounting = 'EBP'
+        val_calcul_lot = 'M'
         
         company_id = self.env['res.company']._company_default_get('hubi.general_settings')
         val_company_id =company_id.id 
@@ -92,6 +95,7 @@ class Wizard_GeneralSettings(models.TransientModel):
             val_account_file_transfer = settings_vals.account_file_transfer
             val_writing_file_transfer = settings_vals.writing_file_transfer
             val_type_accounting = settings_vals.type_accounting
+            val_calcul_lot = settings_vals.calcul_lot
             
         if valeur == 'name':
             retour = val_name   
@@ -131,6 +135,9 @@ class Wizard_GeneralSettings(models.TransientModel):
         
         if valeur == 'type_accounting':
             retour = val_type_accounting
+            
+        if valeur == 'calcul_lot':
+            retour = val_calcul_lot
                         
         return retour
 
@@ -150,7 +157,8 @@ class Wizard_GeneralSettings(models.TransientModel):
                 'path_account_transfer' : self.path_account_transfer,
                 'account_file_transfer' : self.account_file_transfer,
                 'writing_file_transfer' : self.writing_file_transfer,
-                'type_accounting' : self.type_accounting
+                'type_accounting' : self.type_accounting,
+                'calcul_lot' : self.calcul_lot
                 }
         #prepare_setting = self.env['hubi.general_settings'].write(_vals)
         #self.env.cr.commit()
@@ -169,18 +177,19 @@ class Wizard_GeneralSettings(models.TransientModel):
                     path_account_transfer = %s,
                     account_file_transfer = %s,
                     writing_file_transfer = %s,
-                    type_accounting = %s 
+                    type_accounting = %s,
+                    calcul_lot = %s  
                     WHERE name = %s AND company_id = %s
                            """
             
         else:
             company =self.env['res.company']._company_default_get('hubi.general_settings')    
             query = """INSERT INTO hubi_general_settings 
-                    ( auxiliary_accounting, root_account_auxiliary_customer, root_account_auxiliary_supplier, length_account_auxiliary, length_account_general, complete_0_account_auxiliary, complete_0_account_general, path_account_transfer, account_file_transfer, writing_file_transfer, type_accounting, name, company_id) 
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                    ( auxiliary_accounting, root_account_auxiliary_customer, root_account_auxiliary_supplier, length_account_auxiliary, length_account_general, complete_0_account_auxiliary, complete_0_account_general, path_account_transfer, account_file_transfer, writing_file_transfer, type_accounting, calcul_lot, name, company_id) 
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         
         #try:                   
-        self.env.cr.execute(query,  (self.auxiliary_accounting, self.root_account_auxiliary_customer, self.root_account_auxiliary_supplier, self.length_account_auxiliary, self.length_account_general, self.complete_0_account_auxiliary, self.complete_0_account_general, self.path_account_transfer, self.account_file_transfer, self.writing_file_transfer,self.type_accounting, self.name, self.company_id.id))
+        self.env.cr.execute(query,  (self.auxiliary_accounting, self.root_account_auxiliary_customer, self.root_account_auxiliary_supplier, self.length_account_auxiliary, self.length_account_general, self.complete_0_account_auxiliary, self.complete_0_account_general, self.path_account_transfer, self.account_file_transfer, self.writing_file_transfer,self.type_accounting, self.calcul_lot, self.name, self.company_id.id))
         self.env.cr.commit()
         #except Exception as e:
         #    _logger.warning(

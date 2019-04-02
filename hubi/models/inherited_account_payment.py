@@ -24,7 +24,9 @@ class HubiAccountPaymentTermLine(models.Model):
 
     def _get_payment_mode_domain(self):    
         domain = [] 
-        domain.append(('company_id', '=', self.payment_id.company_id.id))    
+        #domain.append(('company_id', '=', self.payment_id.company_id.id))
+        companies = self.env.user.company_ids  
+        domain.append(('company_id', 'in', companies.ids))        
         return domain
     
     payment_mode_id = fields.Many2one('hubi.payment_mode', string='Payment Mode', domain=lambda self: self._get_payment_mode_domain())

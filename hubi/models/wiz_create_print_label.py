@@ -45,6 +45,12 @@ class Wizard_create_print_label(models.TransientModel):
        
         return {'domain': {'product_id': product_domain}}
 
+    @api.onchange( 'partner_id')
+    def _onchange_partner(self):
+        self.carrier_id = None
+        if self.partner_id:
+           self.carrier_id = self.partner_id.carrier_id 
+            
     @api.onchange('product_id', 'partner_id')
     def _onchange_partner_product(self):
         self.pds = None
@@ -56,6 +62,7 @@ class Wizard_create_print_label(models.TransientModel):
         self.etabexp_id = None
         self.health_number = None 
         self.code_128 = None 
+        
         
         if self.partner_id:
             # Recherche de l'établissement expéditeur 
@@ -81,7 +88,8 @@ class Wizard_create_print_label(models.TransientModel):
            
             color_partner = self.partner_id.customer_color_etiq
             printer_partner = self.partner_id.etiq_printer
-            modele_partner = self.partner_id.label_model_id    
+            modele_partner = self.partner_id.label_model_id
+             
             
         if (self.product_id) and (self.partner_id):
             color_prod = self.product_id.product_color
@@ -118,7 +126,7 @@ class Wizard_create_print_label(models.TransientModel):
             
             self.pds = weight_prod
             self.nb_mini = number_prod   
-
+              
             # Priorité 1 : Tarif
             if id_partner_price != 0:
                     self.color_etiq = color_price
@@ -147,9 +155,7 @@ class Wizard_create_print_label(models.TransientModel):
                 elif modele_prod:
                     self.label_id = modele_prod    
         
-        
-
-                
+               
     packaging_date = fields.Date(string="Packaging date",default=lambda self: fields.Date.today())
     sending_date = fields.Date(string="Sending date",default=lambda self: fields.Date.today())
     caption_etiq = fields.Char(string="Caption label")
@@ -177,16 +183,16 @@ class Wizard_create_print_label(models.TransientModel):
                                     ("#008000", "green"),("#D2691E", "brown"),
                                     ("#FFFFFF", "white"),("#CCCCCC", "grey"),
                                     ("#FFC0CB", "pink")], string='Color Etiq')
-
+    #carrier_id = fields.Integer(string="Carrier ID")
+    carrier_id = fields.Many2one('delivery.carrier', 'Carrier ID')
     message = fields.Text(string="Information")
    
     @api.multi
     def create_print_label_old(self):  
         self.env.cr.commit()
-        #FP20190318 Remplacement l.file par l.text et sl.pds par case ...sl.pds / sl.qte end
         query = """SELECT to_char(sl.packaging_date,'DD/MM/YYYY'), to_char(sl.sending_date,'DD/MM/YYYY'), pt.etiq_description, hfc.name, hfp.name,
                     pt.etiq_mention, 
-                    sl.code_barre, sl.qte, case sl.qte when 0 then sl.pds else sl.pds/sl.qte end, sl.nb_mini, p.realname, p.adressip,l.text,
+                    sl.code_barre, sl.qte, sl.pds, sl.nb_mini, p.realname, p.adressip,l.file,
                     t.customer_name_etiq, t.customer_city_etiq, etab.health_number, etab.company_name_etiq, etab.company_city_etiq, 
                     sl.numlot, sl.color_etiq, pt.etiq_latin, pt.etiq_spanish
                     FROM wiz_create_print_label sl
@@ -226,13 +232,12 @@ class Wizard_create_print_label(models.TransientModel):
                 ("color", color)]
             
             if(printerName is not None and printerName != "" and labelFile is not None and labelFile != ""):
-                printer = printerName
-                #FP20190318 if (adressip is not None and adressip != ""):
-                #    printer = "\\\\" + adressip + "\\" + printerName
-                #else:
-                #    printer = printerName
+                if (adressip is not None and adressip != ""):
+                    printer = "\\\\" + adressip + "\\" + printerName
+                else:
+                    printer = printerName
                     
-                ctrl_print.printlabelonwindows(self,printer,labelFile,'[',informations)    
+                ctrl_print.printlabelonwindows(printer,labelFile,'[',informations)    
 
         return {'type': 'ir.actions.act_window_close'} 
     
