@@ -13,7 +13,7 @@ class HubiSaleReport(models.Model):
     caliber_name = fields.Char('Caliber Name', readonly=True)
     packaging_name = fields.Char('Packaging Name', readonly=True)
     
-    packaging_date = fields.Datetime('Date Order', readonly=True)
+    packaging_date = fields.Datetime('Packaging Date', readonly=True)
     sending_date = fields.Datetime('Sending Date', readonly=True)
     #effective_date = fields.Datetime('Effective Date', readonly=True)
     invoice_status = fields.Selection([
@@ -40,7 +40,7 @@ class HubiSaleReport(models.Model):
                 pc.complete_name as category_name, hfc.name as caliber_name, 
                 hfp.name as packaging_name, 
                 
-                s.confirmation_date as sending_date, s.packaging_date as packaging_date,
+                s.sending_date as sending_date, s.packaging_date as packaging_date,
                 s.invoice_status as invoice_status, avg(l.price_weight) as price_weight
                 
                 ,t.statistics_alpha_1 as stat_prod_1, t.statistics_alpha_2 as stat_prod_2
@@ -61,8 +61,7 @@ class HubiSaleReport(models.Model):
         return super(HubiSaleReport, self)._group_by() + """, dc.name,
                     pc.complete_name, hfc.name,hfp.name,
                     
-                    s.confirmation_date, s.sending_date,
-                    s.packaging_date, s.invoice_status
+                    s.sending_date, s.packaging_date, s.invoice_status
                     
                     ,t.statistics_alpha_1, t.statistics_alpha_2, t.statistics_alpha_3, 
                     t.statistics_alpha_4, t.statistics_alpha_5, 

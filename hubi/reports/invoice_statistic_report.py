@@ -76,16 +76,16 @@ class AccountInvoiceReport(models.Model):
     category_partner = fields.Char('Category Partner', readonly=True)
     free_product = fields.Boolean(string='Free Product', default=False, readonly=True)
 
-    stat_prod_1 = fields.Char('statistics product 1', readonly=True)
-    stat_prod_2 = fields.Char('statistics product 2', readonly=True)
-    stat_prod_3 = fields.Char('statistics product 3', readonly=True)
-    stat_prod_4 = fields.Char('statistics product 4', readonly=True)
-    stat_prod_5 = fields.Char('statistics product 5', readonly=True)
-    stat_partner_1 = fields.Char('statistics partner 1', readonly=True)
-    stat_partner_2 = fields.Char('statistics partner 2', readonly=True)
-    stat_partner_3 = fields.Char('statistics partner 3', readonly=True)
-    stat_partner_4 = fields.Char('statistics partner 4', readonly=True)
-    stat_partner_5 = fields.Char('statistics partner 5', readonly=True)
+    stat_prod_1 = fields.Char('Statistics product 1', readonly=True)
+    stat_prod_2 = fields.Char('Statistics product 2', readonly=True)
+    stat_prod_3 = fields.Char('Statistics product 3', readonly=True)
+    stat_prod_4 = fields.Char('Statistics product 4', readonly=True)
+    stat_prod_5 = fields.Char('Statistics product 5', readonly=True)
+    stat_partner_1 = fields.Char('Statistics partner 1', readonly=True)
+    stat_partner_2 = fields.Char('Statistics partner 2', readonly=True)
+    stat_partner_3 = fields.Char('Statistics partner 3', readonly=True)
+    stat_partner_4 = fields.Char('Statistics partner 4', readonly=True)
+    stat_partner_5 = fields.Char('Statistics partner 5', readonly=True)
    
     _order = 'date desc'
 
