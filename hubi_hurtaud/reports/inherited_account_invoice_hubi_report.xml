@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_invoice_document_hubi_hurtaud" inherit_id="hubi.report_invoice_document_hubi">
+        <xpath expr="//div/div/div" position="replace">
+            <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
+                <strong t-field="o.partner_id"
+                    t-options='{"widget": "contact", "fields": ["name"], "no_marker": True}' />
+                <address t-field="o.partner_id"
+                    t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}' />
+                <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
+            </div>
+            
+        </xpath>
+        <xpath expr="//thead" position="replace">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th class="hidden">Source Document</th>
+                    <!--<th>Category</th>
+                    <th>Caliber</th>-->
+                    <th class="text-right">Quantité</th>
+                    <!--<th>Packaging</th>-->
+                    <th class="text-right">Poids</th>
+                    <th class="text-right">Prix au poids</th>
+                    <th class="text-right">Prix unitaire</th>
+                    <th t-if="display_discount" class="text-right">Disc.(%)</th>
+                    <th class="text-right">TVA</th>
+                    <th class="text-right">Montant</th>
+                </tr>
+            </thead>
+        </xpath>
+        <xpath expr="//tbody" position="replace">
+            <tbody class="invoice_tbody">
+                <tr t-foreach="o.invoice_line_ids" t-as="l">
+
+                            
+                                <td><span t-field="l.name"/></td>
+                                <td class="hidden"><span t-field="l.origin"/></td>
+                                    
+                                <td class="text-right">
+                                    <span t-field="l.quantity"/>
+                                    <!--<span t-field="l.uom_id"  groups="product.group_uom"/>-->
+                                    <t t-if="l.product_id.categ_id.shell">
+                                            <t t-set="total_qty" t-value="total_qty + l.quantity" />
+                                        </t> 
+                                </td>
+                                
+                                <td class="text-right">
+                                    <t t-if="l.product_id.categ_id.shell">
+                                        <span t-field="l.weight"/>
+                                        <t t-set="total_weight" t-value="total_weight + l.weight" />
+                                    </t>
+                                </td>
+                                <td class="text-right">
+                                    <t t-if="l.product_id.categ_id.shell">
+                                        <span t-field="l.price_weight"/>
+                                    </t>    
+                                </td>
+                                
+                                <td class="text-right">
+                                    <span t-field="l.price_unit"/>
+                                </td>
+                                <td t-if="display_discount" class="text-right">
+                                    <span t-field="l.discount"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
+                                </td>
+                                <td class="text-right" id="subtotal">
+                                    <span t-field="l.price_subtotal"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                               
+                                <!-- Ligne commentaire  --> 
+                                <t t-if="l.comment">
+                                    <tr>
+                                    <td  colspan="5"><span t-field="l.comment"/></td>
+                                    </tr>
+                                </t>
+                                
+                            </tr>
+                            
+                            <tr t-foreach="range(max(5-len(o.invoice_line_ids),0))" t-as="l">
+                                <td t-translation="off">&amp;nbsp;</td>
+                                <td class="hidden"></td>
+                                <td></td>
+                                <td></td>
+                                <td t-if="display_discount"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+            </tbody>
+        </xpath>
+    </template>
+</odoo>
