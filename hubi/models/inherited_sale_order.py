@@ -352,7 +352,9 @@ class HubiSaleOrder(models.Model):
             return
     
         values = { 
-            'carrier_id' : self.partner_id.carrier_id and self.partner_id.carrier_id.id or False
+            'carrier_id' : self.partner_id.carrier_id and self.partner_id.carrier_id.id \
+            or self.partner_id.property_delivery_carrier_id and self.partner_id.property_delivery_carrier_id.id \
+            or False
             }
 
         #if self.partner_id.shipper_id:
@@ -369,9 +371,11 @@ class HubiSaleOrder(models.Model):
         :returns: list of created invoices
         """
         inv_obj = self.env['account.invoice']
+        inv_lines = self.env['account.invoice.line']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = {}
         references = {}
+        account_divers  = self.env['product.category'].search([('reference', 'in', ['D', 'd', 'DIVERS','Divers','divers',''] )], limit=1 ) 
         
         if not dateInvoice:
             date_invoices = time.strftime('%Y-%m-%d')
@@ -397,18 +401,43 @@ class HubiSaleOrder(models.Model):
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
+                create_ent_bl = False
                 if group_key not in invoices:
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     references[invoice] = order
                     invoices[group_key] = invoice
+                    
+                    create_ent_bl = True
+                    
                 elif group_key in invoices:
                     vals = {}
                     if order.name not in invoices[group_key].origin.split(', '):
                         vals['origin'] = invoices[group_key].origin + ', ' + order.name
+                        create_ent_bl = True
                     if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', ') and order.client_order_ref != invoices[group_key].name:
                         vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
                     invoices[group_key].write(vals)
+                    
+                if create_ent_bl:
+                    #month = order.date_order.month 
+                    #year = order.date_order.year
+                    #day = order.date_order.day
+                    #dateorder=datetime.strptime(order.date_order, '%d-%m-%Y')
+                    dateorder=fields.Date.from_string(order.date_order).strftime('%d/%m/%Y')
+                    res = {
+                        'name': 'BL no ' + order.name + ' du ' + dateorder,
+                        'sequence': 0,
+                        'origin': order.name,
+                        'price_unit': 0,
+                        'quantity': 0,
+                        'product_id':  False,
+                        'layout_category_id':  False,
+                        'account_id':  account_divers.property_account_income_categ_id.id or 630,
+                    }
+                    res.update({'invoice_id': invoices[group_key].id })
+                    inv_lines |= self.env['account.invoice.line'].create(res)   
+                    
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
