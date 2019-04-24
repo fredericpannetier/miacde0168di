@@ -31,7 +31,7 @@
         </xpath>
         <xpath expr="//tbody" position="replace">
             <tbody class="invoice_tbody">
-                <tr t-foreach="o.invoice_line_ids" t-as="l">
+                <tr t-foreach="o.invoice_line_ids.sorted(key=lambda r: r.id)" t-as="l">
 
                             
                                 <td><span t-field="l.name"/></td>
