@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hubi
-#	* hubi_bom
+# 	* hubi_bom
+# 	* hubi
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-27 09:59+0000\n"
-"PO-Revision-Date: 2019-03-27 09:59+0000\n"
+"POT-Creation-Date: 2019-05-09 15:06+0000\n"
+"PO-Revision-Date: 2019-05-09 17:25+0200\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
+"Language: fr\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #. module: hubi
 #: model:mail.template,body_html:hubi.email_template_accounting_transfer
-msgid "\n"
+msgid ""
+"\n"
 "<p>Dear,\n"
 "You have been invited to transfer your writting from  ${object.date_start[8:10]}-${object.date_start[5:7]}-${object.date_start[0:4]} to  ${object.date_end[8:10]}-${object.date_end[5:7]}-${object.date_end[0:4]}\n"
 " in your accounting.\n"
@@ -27,8 +30,8 @@ msgid "\n"
 "<br/>\n"
 "${object.create_uid.signature | safe}  \n"
 "</p>\n"
-""
-msgstr "\n"
+msgstr ""
+"\n"
 "<p>Dear,\n"
 "You have been invited to transfer your writting from  ${object.date_start[8:10]}-${object.date_start[5:7]}-${object.date_start[0:4]} to  ${object.date_end[8:10]}-${object.date_end[5:7]}-${object.date_end[0:4]}\n"
 " in your accounting.\n"
@@ -37,11 +40,11 @@ msgstr "\n"
 "<br/>\n"
 "${object.create_uid.signature | safe}  \n"
 "</p>\n"
-""
 
 #. module: hubi
 #: model:mail.template,body_html:hubi.email_template_invoice
-msgid "\n"
+msgid ""
+"\n"
 "<p>Dear,\n"
 "Your invoices.\n"
 "<br/>\n"
@@ -49,8 +52,8 @@ msgid "\n"
 "<br/>\n"
 "${object.create_uid.signature | safe}  \n"
 "</p>\n"
-""
-msgstr "\n"
+msgstr ""
+"\n"
 "<p>Dear,\n"
 "Your invoices.\n"
 "<br/>\n"
@@ -58,11 +61,11 @@ msgstr "\n"
 "<br/>\n"
 "${object.create_uid.signature | safe}  \n"
 "</p>\n"
-""
 
 #. module: hubi
 #: model:mail.template,body_html:hubi.email_template_sale_order
-msgid "\n"
+msgid ""
+"\n"
 "<p>Dear,\n"
 "Your sale orders.\n"
 "<br/>\n"
@@ -70,16 +73,15 @@ msgid "\n"
 "<br/>\n"
 "${object.create_uid.signature | safe}  \n"
 "</p>\n"
-""
-msgstr "\n"
-"<p>Dear,\n"
+msgstr ""
+"\n"
+"<p style=\"margin:0px 0px 9px 0px;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">Dear,\n"
 "Your sale orders.\n"
-"<br/>\n"
+"<br>\n"
 "Best regards,\n"
-"<br/>\n"
+"<br>\n"
 "${object.create_uid.signature | safe}  \n"
 "</p>\n"
-""
 
 #. module: hubi_bom
 #: model:ir.model.fields,field_description:hubi_bom.field_product_product_bom_count
@@ -127,12 +129,14 @@ msgstr "(éditer)"
 #. module: hubi_bom
 #: code:addons/hubi_bom/models/mrp_bom.py:271
 #, python-format
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                        Click to upload files to your product.\n"
 "                    </p><p>\n"
 "                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
-msgstr "<p class=\"oe_view_nocontent_create\">\n"
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                        Click to upload files to your product.\n"
 "                    </p><p>\n"
 "                        Use this feature to store any files, like drawings or specifications.\n"
@@ -313,9 +317,11 @@ msgstr "Un module_option existe  déjà avec ce code. Il doit être unique !"
 
 #. module: hubi
 #: model:ir.actions.act_window,help:hubi.action_hubi_product_pricelist
-msgid "A price list contains rules to be evaluated in order to compute\n"
+msgid ""
+"A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
-msgstr "Un tarif contient des règles d'évaluation afin de calculer\n"
+msgstr ""
+"Un tarif contient des règles d'évaluation afin de calculer\n"
 "                le prix des aricles."
 
 #. module: hubi
@@ -395,7 +401,7 @@ msgstr "Comptabilité"
 msgid "Accounting Transfer"
 msgstr "Transfert comptabilité"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.ui.view,arch_db:hubi.moduleoption_search
 #: model:ir.ui.view,arch_db:hubi.shipper_search
 #: model:ir.model.fields,field_description:hubi_bom.field_mrp_bom_active
@@ -464,10 +470,12 @@ msgstr "Toutes entrées modifiées"
 
 #. module: hubi_bom
 #: sql_constraint:mrp.bom.line:0
-msgid "All product quantities must be greater or equal to 0.\n"
+msgid ""
+"All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr "Toutes les quantités des produits doivent être supérieures ou egales à 0.\n"
+msgstr ""
+"Toutes les quantités des produits doivent être supérieures ou egales à 0.\n"
 "Lignes avec 0 en quantités doivent être des lignes optionelles. \n"
 "Vous devez installer le module MRP si vous voulez gérer les nomenclatures !"
 
@@ -596,7 +604,7 @@ msgstr "Applicable à"
 msgid "Applied on"
 msgstr "Applicable à"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.ui.view,arch_db:hubi.search_establishment
 #: model:ir.ui.view,arch_db:hubi.search_res_partner_filter
 #: model:ir.ui.view,arch_db:hubi_bom.view_mrp_bom_filter
@@ -619,6 +627,18 @@ msgstr "Actifs"
 #, python-format
 msgid "Attachments"
 msgstr "Attachments"
+
+#. module: hubi
+#: selection:hubi.general_settings,calcul_lot:0
+#: selection:wiz.general_settings,calcul_lot:0
+msgid "Auto AAAAMMJJ"
+msgstr "Auto AAAAMMJJ"
+
+#. module: hubi
+#: selection:hubi.general_settings,calcul_lot:0
+#: selection:wiz.general_settings,calcul_lot:0
+msgid "Auto AAAAQQQ"
+msgstr "Auto AAAAQQQ"
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_res_partner_automatic_batch
@@ -707,6 +727,13 @@ msgid "Barcode EAN13 invalid. The key is "
 msgstr "Barcode EAN13 invalide. La clé est "
 
 #. module: hubi
+#: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_calcul_lot
+#: model:ir.model.fields,field_description:hubi.field_sale_order_calcul_lot
+#: model:ir.model.fields,field_description:hubi.field_wiz_general_settings_calcul_lot
+msgid "Batch Number Calculation"
+msgstr "Calcul du numéro de lot"
+
+#. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_sale_order_line_no_lot
 #: model:ir.model.fields,field_description:hubi.field_wiz_create_print_label_numlot
 #: model:ir.model.fields,field_description:hubi.field_wiz_sale_order_print_label_numlot
@@ -718,7 +745,7 @@ msgstr "Numéro de lot"
 msgid "Bill Of Material"
 msgstr "Nomenclature"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model,name:hubi.model_mrp_bom
 #: model:ir.model,name:hubi_bom.model_mrp_bom
 #: model:ir.ui.view,arch_db:hubi_bom.mrp_bom_form_view
@@ -728,9 +755,9 @@ msgstr "Nomenclature"
 #. module: hubi_bom
 #: model:ir.ui.view,arch_db:hubi_bom.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "Bill of Material line"
+msgstr "Liste de composantes:"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.ui.view,arch_db:hubi.hubi_mrp_bom_tree_view
 #: model:ir.actions.act_window,name:hubi_bom.product_open_bom
 #: model:ir.actions.act_window,name:hubi_bom.template_open_bom
@@ -754,17 +781,18 @@ msgstr "Facturation"
 msgid "Billing fees"
 msgstr "Frais de Facturation"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.actions.act_window,name:hubi.action_hubi_mrp_bom_form
 #: model:ir.actions.act_window,name:hubi_bom.mrp_bom_form_action
 #: model:ir.ui.menu,name:hubi_bom.menu_mrp_bom_form_action
 msgid "Bills of Materials"
 msgstr "Nomenclatures"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.actions.act_window,help:hubi.action_hubi_mrp_bom_form
 #: model:ir.actions.act_window,help:hubi_bom.mrp_bom_form_action
-msgid "Bills of Materials allow you to define the list of required raw\n"
+msgid ""
+"Bills of Materials allow you to define the list of required raw\n"
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr "Les nomenclatures vous permettent de définir les matières premières requises pour fabriquer un produit fini, via un ordre de fabrication ou un paquet de produits."
@@ -918,7 +946,7 @@ msgstr "Couleur Etiquette Transporteur"
 #: model:ir.model.fields,field_description:hubi.field_wiz_create_print_label_carrier_id
 #: model:ir.model.fields,field_description:hubi.field_wiz_sale_order_print_label_carrier_id
 msgid "Carrier ID"
-msgstr "Carrier ID"
+msgstr "ID  Transporteur"
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_sale_report_carrier_carrier_name
@@ -999,7 +1027,7 @@ msgstr "Ville"
 msgid "Civility"
 msgstr "Civilité"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.actions.act_window,help:hubi.action_hubi_mrp_bom_form
 #: model:ir.actions.act_window,help:hubi_bom.mrp_bom_form_action
 msgid "Click to create a bill of material."
@@ -1061,7 +1089,7 @@ msgstr "Entité commerciale"
 msgid "Companies"
 msgstr "Sociétés"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_company_id
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_company_id
 #: model:ir.model.fields,field_description:hubi.field_hubi_module_option_company_id
@@ -1118,7 +1146,7 @@ msgstr "Composant"
 msgid "Components"
 msgstr "Composants"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.ui.menu,name:hubi.menu_hubi_config
 #: model:ir.ui.menu,name:hubi_bom.menu_mrp_configuration
 msgid "Configuration"
@@ -1137,6 +1165,7 @@ msgstr "Confirmation Dialogue"
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_sale_report_carrier_confirmation_date
+#: model:ir.ui.view,arch_db:hubi.hubi_sale_order_tree_view
 msgid "Confirmation Date"
 msgstr "Date de confirmation"
 
@@ -1253,11 +1282,10 @@ msgstr "Création Avoir"
 
 #. module: hubi
 #. openerp-web
-#: code:addons/hubi/static/src/xml/qweb - Copie.xml:6
-#: code:addons/hubi/static/src/xml/qweb - Copie.xml:9
+#: code:addons/hubi/static/src/xml/qweb - Copie.xml:6 Copie.xml:9
 #, python-format
 msgid "Create the price-list"
-msgstr "Création  de la liste des prix"
+msgstr "Création de la liste des prix"
 
 #. module: hubi
 #: model:ir.ui.view,arch_db:hubi.hubi_palletization_form
@@ -1269,7 +1297,7 @@ msgstr "Création_Palette"
 msgid "Create_Product"
 msgstr "Création Produit"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department_create_uid
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_create_uid
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_create_uid
@@ -1303,7 +1331,7 @@ msgstr "Création Produit"
 msgid "Created by"
 msgstr "Créé par"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department_create_date
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_create_date
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_create_date
@@ -1361,12 +1389,10 @@ msgid "Credit Notes"
 msgstr "Avoirs"
 
 #. module: hubi
-#: code:addons/hubi/models/inherited_sale_order.py:475
+#: code:addons/hubi/models/inherited_sale_order.py:501
 #, python-format
 msgid "Credit Over Limits !\n"
-""
 msgstr "Dépassement de Crédit !\n"
-""
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_wiz_creditnote_date_creditnote
@@ -1485,6 +1511,13 @@ msgid "DLC Number Day"
 msgstr "DLC Nombre de jour"
 
 #. module: hubi
+#: model:ir.model.fields,field_description:hubi.field_sale_order_line_date_dluo
+#: model:ir.model.fields,field_description:hubi.field_wiz_create_print_label_date_dluo
+#: model:ir.model.fields,field_description:hubi.field_wiz_sale_order_print_label_date_dluo
+msgid "DLUO Date"
+msgstr "DLUO Date"
+
+#. module: hubi
 #: selection:res.partner,periodicity_invoice:0
 #: selection:wiz.invoiceperiod,periodicity_invoice:0
 msgid "Daily"
@@ -1569,7 +1602,7 @@ msgstr "Quantité par défaut sur la Palette"
 #: model:ir.ui.view,arch_db:hubi_bom.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:hubi_bom.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr "Default Unit of Measure"
+msgstr "Unité de Mesure par défaut"
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_default_value
@@ -1669,7 +1702,7 @@ msgstr "Remise Type"
 msgid "Discount Type :"
 msgstr "Remise Type :"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department_display_name
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_display_name
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_display_name
@@ -1743,7 +1776,7 @@ msgstr "Date d'échéance"
 #. module: hubi
 #: model:ir.model,name:hubi.model_hubi_department
 msgid "Départment"
-msgstr "Départment"
+msgstr "Département"
 
 #. module: hubi
 #: model:ir.ui.view,arch_db:hubi.pricelist_hubi_form_view
@@ -1805,10 +1838,12 @@ msgstr "EDI Transporteur Destinataire"
 
 #. module: hubi
 #: model:ir.actions.act_window,help:hubi.action_hubi_product_pricelist
-msgid "Each rule include a set of applicability criteria (date range,\n"
+msgid ""
+"Each rule include a set of applicability criteria (date range,\n"
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
-msgstr "Chaque règle inclus un ensemble de critères d'applicabilité (plages de dates,\n"
+msgstr ""
+"Chaque règle inclus un ensemble de critères d'applicabilité (plages de dates,\n"
 "catégorie de produits,...) et le calcul qui aide facilement à atteindre\n"
 "n'importe quel prix."
 
@@ -1833,7 +1868,7 @@ msgstr "Courriel"
 #: model:ir.actions.server,name:hubi.action_email_invoice_send_server
 #: model:ir.actions.server,name:hubi.action_email_sale_order_send_server
 msgid "Email: Send email"
-msgstr "Email: Send email"
+msgstr "Email: Envoi email"
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_wiz_invoiceperiod_date_end
@@ -2187,7 +2222,7 @@ msgstr "Caché"
 msgid "Hubi"
 msgstr "Hubi"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department_id
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_id
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_id
@@ -2275,20 +2310,24 @@ msgstr "Si le champ actif est défini sur False, cela vous permettra de masquer 
 
 #. module: hubi_bom
 #: model:ir.ui.view,arch_db:hubi_bom.mrp_bom_form_view
-msgid "If the product is a finished product: When processing a sales\n"
+msgid ""
+"If the product is a finished product: When processing a sales\n"
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
-msgstr "Si le produit est un produit fini: lors du traitement d'une \n"
+msgstr ""
+"Si le produit est un produit fini: lors du traitement d'une \n"
 "                                    commande pour ce produit, le bon de livraison contiendra \n"
 "                                    les matières premières au lieu du produit fini."
 
 #. module: hubi_bom
 #: model:ir.ui.view,arch_db:hubi_bom.mrp_bom_form_view
-msgid "If the product is a semi-finished product: When processing a\n"
+msgid ""
+"If the product is a semi-finished product: When processing a\n"
 "                                    manufacturing order that contains that product as component,\n"
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
-msgstr "Si le produit est un produit semi-fini: lors du traitement d'un\n"
+msgstr ""
+"Si le produit est un produit semi-fini: lors du traitement d'un\n"
 "                                    ordre de fabrication contenant ce produit en tant que composant,\n"
 "                                    les matières premières de ce produit seront ajoutées \n"
 "                                    à l'ordre de fabrication du produit final."
@@ -2392,6 +2431,7 @@ msgstr "Ligne de facture"
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_res_partner_periodicity_invoice
 #: model:ir.model.fields,field_description:hubi.field_res_users_periodicity_invoice
+#: model:ir.model.fields,field_description:hubi.field_sale_order_periodicity_invoice
 #: model:ir.model.fields,field_description:hubi.field_wiz_invoiceperiod_periodicity_invoice
 msgid "Invoice Period"
 msgstr "Périodicité Facturation"
@@ -2405,6 +2445,7 @@ msgstr "État de la facture"
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_res_partner_invoice_grouping
 #: model:ir.model.fields,field_description:hubi.field_res_users_invoice_grouping
+#: model:ir.model.fields,field_description:hubi.field_sale_order_invoice_grouping
 msgid "Invoice grouping"
 msgstr "Facture groupée"
 
@@ -2597,7 +2638,7 @@ msgstr "Texte de l'étiquette"
 msgid "Label with EAN128"
 msgstr "Etiquette avec EAN128"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department___last_update
 #: model:ir.model.fields,field_description:hubi.field_hubi_family___last_update
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings___last_update
@@ -2643,7 +2684,7 @@ msgstr "Dernière modification le"
 msgid "Last Month"
 msgstr "Le mois dernier"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department_write_uid
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_write_uid
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_write_uid
@@ -2677,7 +2718,7 @@ msgstr "Le mois dernier"
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_department_write_date
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_write_date
 #: model:ir.model.fields,field_description:hubi.field_hubi_general_settings_write_date
@@ -2794,6 +2835,12 @@ msgstr "Niveau principal"
 #: model:ir.ui.view,arch_db:hubi.view_partner_customer
 msgid "Management"
 msgstr "Gestion"
+
+#. module: hubi
+#: selection:hubi.general_settings,calcul_lot:0
+#: selection:wiz.general_settings,calcul_lot:0
+msgid "Manual"
+msgstr "Manuel"
 
 #. module: hubi_bom
 #: selection:mrp.bom,type:0
@@ -2956,7 +3003,7 @@ msgstr "Nom du département"
 #. module: hubi
 #: model:ir.ui.view,arch_db:hubi.hubi_family_form
 msgid "Name of the family"
-msgstr "Nome de la famille"
+msgstr "Nom de la famille"
 
 #. module: hubi
 #: model:ir.ui.view,arch_db:hubi.miadi_etiquette_labelmodel_form
@@ -3041,6 +3088,11 @@ msgid "Number Invoice"
 msgstr "Numéro Facture"
 
 #. module: hubi
+#: model:ir.model.fields,field_description:hubi.field_product_category_nb_day_dluo
+msgid "Number day DLUO"
+msgstr "Nombre jour DLUO"
+
+#. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_printing_count
 msgid "Number of labels to print"
 msgstr "Nombre d'étiquettes à imprimer"
@@ -3060,12 +3112,14 @@ msgstr "Nombre de palette"
 msgid "OK"
 msgstr "OK"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.actions.act_window,help:hubi.action_hubi_mrp_bom_form
 #: model:ir.actions.act_window,help:hubi_bom.mrp_bom_form_action
-msgid "Odoo uses these BoMs to automatically propose manufacturing\n"
+msgid ""
+"Odoo uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs."
-msgstr "Odoo utilise ces nomenclatures pour proposer automatiquement\n"
+msgstr ""
+"Odoo utilise ces nomenclatures pour proposer automatiquement\n"
 "des ordres de fabrication selon les besoins en approvisionnement."
 
 #. module: hubi
@@ -3103,6 +3157,11 @@ msgstr "Commande n°"
 #: model:ir.model.fields,field_description:hubi.field_res_users_order_code_ean
 msgid "Order Code_EAN"
 msgstr "Commande Code_EAN"
+
+#. module: hubi
+#: model:ir.ui.view,arch_db:hubi.hubi_sale_order_tree_view
+msgid "Order Date"
+msgstr "Date de la commande"
 
 #. module: hubi
 #: model:ir.actions.report,name:hubi.report_orderline_label
@@ -3437,7 +3496,8 @@ msgstr "Paiements"
 
 #. module: hubi
 #: model:ir.actions.act_window,help:hubi.action_hubi_account_payments_transfert
-msgid "Payments are used to register liquidity movements (send, collect or transfer money).\n"
+msgid ""
+"Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
 msgstr "Les paiements sont utilisés pour enregistrer des mouvements de trésorerie (envoi, collecte ou transfert d'argent). Vous pouvez ensuite traiter ces paiements par vos propres moyens ou en utilisant les mécanismes installés."
 
@@ -3617,6 +3677,7 @@ msgstr "Imprimer"
 
 #. module: hubi
 #: model:ir.ui.menu,name:hubi.menu_hubi_sales_print_label
+#: model:ir.ui.view,arch_db:hubi.hubi_sale_order_form_view
 #: model:ir.ui.view,arch_db:hubi.view_hubi_packing_preparation_tree
 #: model:ir.ui.view,arch_db:hubi.wiz_prepare_sale_order_print_label
 msgid "Print Label"
@@ -3661,14 +3722,14 @@ msgstr "Imprimantes"
 #. module: hubi
 #: model:ir.model,name:hubi.model_hubi_printing
 msgid "Printing"
-msgstr "Printing"
+msgstr "Impression"
 
 #. module: hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_printing_printing_date
 msgid "Printing date"
-msgstr "Printing date"
+msgstr "Date Impression"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: selection:hubi.family,main_level:0
 #: model:ir.model,name:hubi.model_product_product
 #: model:ir.model.fields,field_description:hubi.field_hubi_palletization_line_product_id
@@ -3733,7 +3794,7 @@ msgstr "Edition des Tarifs"
 msgid "Product Quantity"
 msgstr "Quantité d'articles"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model,name:hubi.model_product_template
 #: model:ir.model,name:hubi_bom.model_product_template
 msgid "Product Template"
@@ -3756,7 +3817,7 @@ msgstr "Variante d'article"
 msgid "Product grouping"
 msgstr "Produit groupé"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.actions.act_window,name:hubi.action_hubi_product_template
 #: model:ir.actions.act_window,name:hubi.action_hubi_purchasable_product_template
 #: model:ir.actions.act_window,name:hubi.action_hubi_sellable_product_template
@@ -3801,7 +3862,7 @@ msgstr "Qté commandée"
 msgid "Qty To Invoice"
 msgstr "Qté à facturer"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_product_product_quantity
 #: model:ir.model.fields,field_description:hubi.field_product_template_quantity
 #: model:ir.model.fields,field_description:hubi.field_wiz_create_print_label_qte
@@ -3891,7 +3952,7 @@ msgstr "Erreur de récurrence! Un produit avec une nomenclature ne doit pas se r
 msgid "Red Label Number"
 msgstr "Numéro Label Rouge"
 
-#. modules: hubi, hubi_bom
+#. modules: hubi_bom, hubi
 #: model:ir.model.fields,field_description:hubi.field_hubi_family_reference
 #: model:ir.model.fields,field_description:hubi.field_product_category_reference
 #: model:ir.model.fields,field_description:hubi_bom.field_mrp_bom_code
@@ -4184,6 +4245,11 @@ msgstr "Date Envoi"
 #: model:ir.model.fields,field_description:hubi.field_wiz_sale_order_print_label_sending_date
 msgid "Sending date"
 msgstr "Date envoi"
+
+#. module: hubi
+#: model:ir.ui.menu,name:hubi.menu_hubi_sent_mail
+msgid "Sent mails"
+msgstr "Mails envoyés"
 
 #. module: hubi_bom
 #: model:ir.model.fields,field_description:hubi_bom.field_mrp_bom_line_sequence
@@ -4517,20 +4583,20 @@ msgid "The type of the partner."
 msgstr "Le type du partenaire."
 
 #. module: hubi
-#: code:addons/hubi/models/wiz_create_creditnote_ca.py:230
+#: code:addons/hubi/models/wiz_create_creditnote_ca.py:231
 #, python-format
 msgid "The value of the credit note amount must be positive."
 msgstr "Le montant des avoirs doit être positif."
 
 #. module: hubi
-#: code:addons/hubi/models/wiz_create_creditnote_ca.py:225
+#: code:addons/hubi/models/wiz_create_creditnote_ca.py:226
 #, python-format
 msgid "There is no income account defined for this product: \"%s\". You may have to install a chart of account from Accounting app, settings menu."
 msgstr "Aucun compte de revenu pour cet article: \"%s\". Vous devez installer le paramétrage des comptes."
 
 #. module: hubi
-#: code:addons/hubi/models/inherited_sale_order.py:395
-#: code:addons/hubi/models/inherited_sale_order.py:399
+#: code:addons/hubi/models/inherited_sale_order.py:421
+#: code:addons/hubi/models/inherited_sale_order.py:425
 #, python-format
 msgid "There is no invoiceable line."
 msgstr "Aucune ligne facturable."
@@ -4743,6 +4809,7 @@ msgstr "Variantes"
 
 #. module: hubi
 #: model:ir.ui.view,arch_db:hubi.view_partner_customer
+#: model:ir.ui.view,arch_db:hubi.wiz_general_settings_form
 msgid "Various"
 msgstr "Divers"
 
@@ -5474,4 +5541,3 @@ msgstr "blanc"
 #: selection:wiz_sale_order_print_label,color_etiq:0
 msgid "yellow"
 msgstr "jaune"
-
