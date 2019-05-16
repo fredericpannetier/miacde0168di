@@ -13,8 +13,8 @@ class HubiSaleReport(models.Model):
     caliber_name = fields.Char('Caliber Name', readonly=True)
     packaging_name = fields.Char('Packaging Name', readonly=True)
     
-    packaging_date = fields.Datetime('Packaging Date', readonly=True)
-    sending_date = fields.Datetime('Sending Date', readonly=True)
+    packaging_date = fields.Date('Packaging Date', readonly=True)
+    sending_date = fields.Date('Sending Date', readonly=True)
     #effective_date = fields.Datetime('Effective Date', readonly=True)
     invoice_status = fields.Selection([
         ('upselling', 'Upselling Opportunity'),

@@ -46,7 +46,7 @@ class HubiSaleReportCarrier(models.Model):
     volume = fields.Float('Volume', readonly=True)
     
     carrier_name = fields.Char('Carrier Name', readonly=True)
-    sending_date = fields.Datetime('Sending Date', readonly=True)
+    sending_date = fields.Date('Sending Date', readonly=True)
     invoice_status = fields.Selection([
         ('upselling', 'Upselling Opportunity'),
         ('invoiced', 'Fully Invoiced'),
@@ -77,8 +77,8 @@ class HubiSaleReportCarrier(models.Model):
                     sum(s.pallet_number) as pallet_number,
                     count(*) as nbr,
                     s.name as name,
-                    s.date_order as date,
-                    s.confirmation_date as confirmation_date,
+                    to_char(s.date_order, 'DD/MM/YYYY') as date,
+                    to_char(s.confirmation_date, 'DD/MM/YYYY') as confirmation_date,
                     s.state as state,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
@@ -127,8 +127,8 @@ class HubiSaleReportCarrier(models.Model):
         group_by_str = """
             GROUP BY
                     s.name,
-                    s.date_order,
-                    s.confirmation_date,
+                    to_char(s.date_order, 'DD/MM/YYYY'),
+                    to_char(s.confirmation_date, 'DD/MM/YYYY'),
                     s.partner_id,
                     s.user_id,
                     s.state,
