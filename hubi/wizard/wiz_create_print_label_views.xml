@@ -45,7 +45,7 @@
                             <field name="pds"  />
                             <field name="nb_mini"  />
                             <field name="numlot"  />
-                                                    
+                            <field name="date_dluo"  />                        
                         </group>
                     </group>
                     
