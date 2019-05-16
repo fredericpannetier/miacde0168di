@@ -212,6 +212,8 @@ class HubiInheritedProductCategory(models.Model):
     reference = fields.Char(string='Reference')
     shell = fields.Boolean(string='Shell', default=True)
     category_caliber_ids = fields.One2many('hubi.product_category_caliber', 'categ_id', string='Caliber for this category')
+    nb_day_dluo = fields.Integer(string='Number day DLUO', default=0)
+    
     
     @api.multi
     def action_create_products(self):

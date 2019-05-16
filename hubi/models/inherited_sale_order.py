@@ -50,7 +50,7 @@ class HubiSaleOrderLine(models.Model):
         
         return {'domain': {'product_id': product_domain}}
 
-    @api.depends('product_uom_qty', 'price_total', 'product_id')
+    @api.depends('product_uom_qty', 'price_total', 'product_id', 'order_id')
     def _compute_weight(self):
         """
         Compute the weights of the Sale Order lines.
@@ -76,12 +76,46 @@ class HubiSaleOrderLine(models.Model):
             line.update({
                 'weight': weight,
                 'price_weight': price_weight
+                
             })
+            
+
+    @api.depends('order_id', 'product_id', 'order_id.packaging_date', 'order_partner_id')
+    def _compute_dluo(self):
+        for line in self:
+            if line.order_id.packaging_date and line.product_id.id:
+                if line.order_partner_id.dlc_number_day and line.order_partner_id.dlc_number_day>0:
+                    val_nb_day=line.order_partner_id.dlc_number_day
+                else:    
+                    val_nb_day=line.product_id.categ_id.nb_day_dluo or 7
+                val_calcul_dluo = fields.Date.from_string(line.order_id.packaging_date) + timedelta(days=val_nb_day)
+                
+                line.update({
+                'date_dluo': val_calcul_dluo
+                })
+
     
     @api.onchange('product_id')
     def product_change(self):
         if self.product_id.id:
             super(HubiSaleOrderLine, self).product_uom_change()
+            
+            # Batch number
+            if not self.no_lot:
+                _nolot = ''
+                if self.order_id.sending_date:
+                    val_calcul_lot = self.order_id.calcul_lot 
+                    dateAAAAMMJJ=fields.Date.from_string(self.sending_date).strftime('%Y%m%d')
+                    dateQQQ=fields.Date.from_string(self.sending_date).strftime('%Y%j')
+        
+                    if val_calcul_lot=='AQ': 
+                        _nolot = dateQQQ
+                    else:
+                        if val_calcul_lot=='AMJ': 
+                            _nolot = dateAAAAMMJJ
+
+                self.no_lot = _nolot
+              
             if self.price_unit == 0:
                 #raise UserError(_('Error in the price. The value is 0.'))
                 title = ("Warning for %s") % self.product_id.name
@@ -90,8 +124,8 @@ class HubiSaleOrderLine(models.Model):
                     'title': title,
                     'message': message, }
                 return {'warning': warning}
-        
     
+            
     category_id = fields.Many2one('product.category', 'Internal Category', domain=[('parent_id','!=',False), ('shell', '=', True)], store=False)
     caliber_id = fields.Many2one('hubi.family', string='Caliber', domain=[('level', '=', 'Caliber')], help="The Caliber of the product.", store=False)
     packaging_id = fields.Many2one('hubi.family', string='Packaging', domain=[('level', '=', 'Packaging')], help="The Packaging of the product.", store=False)
@@ -102,6 +136,8 @@ class HubiSaleOrderLine(models.Model):
     partner_id = fields.Many2one("res.partner", string='Customer')
     done_packing = fields.Boolean(string='Packing Done')
     sending_date = fields.Date(string="Sending Date", store=False, compute='_compute_date_sending' )
+    date_dluo = fields.Date(string="DLUO Date",store=True, compute='_compute_dluo')   
+
    
     @api.multi
     def invoice_line_create(self, invoice_id, qty):
@@ -136,11 +172,6 @@ class HubiSaleOrderLine(models.Model):
 
             })
         return
-        #product_id = self.product_id.id
-        #order_id = self.order_id.id
-        #done = False
-        #self._cr.execute("UPDATE sale_order_line SET done_packing = True WHERE product_id=%s AND order_id=%s", (product_id, order_id))
-        #self.env.cr.commit()
  
     @api.multi
     def _compute_date_sending(self):
@@ -245,97 +276,40 @@ class HubiSaleOrder(models.Model):
             'domain':dom,
         }
     
-    #@api.multi
-    #def action_search_products_old(self):
-    #    self.ensure_one()
-    #    ir_model_data = self.env['ir.model.data']
-    #    product_count = 0
-    #    sale_order_id = self.id
-    #    #create  products depending on the pricelist
-    #    query_args = {'pricelist_code': self.pricelist_id.id,'date_order' : self.date_order}
-    #    query = """select product_tmpl_id, date_start, date_end, product_template.categ_id, caliber_id,
-    #                case compute_price when 'fixed' then fixed_price else list_price*(1-percent_price/100) end as Price
-    #                from product_pricelist_item 
-    #                inner join product_template on product_tmpl_id=product_template.id
-    #                where (pricelist_id= %(pricelist_code)s ) and (product_tmpl_id is not null) 
-    #                and (date_start<=%(date_order)s  or date_start is null)
-    #                and (date_end>=%(date_order)s  or date_start is null)
-    #                order by product_tmpl_id"""
-
-    #    self.env.cr.execute(query, query_args)
-    #    ids = [(r[0], r[1], r[2], r[3], r[4], r[5]) for r in self.env.cr.fetchall()]
-            
-    #    for product, date_start, date_end, category, caliber, unit_price in ids:
-    #        price_vals = {
-    #                'order_id': sale_order_id,
-    #                'pricelist_line_id':self.pricelist_id.id,
-    #                'product_id': product,
-    #                'qty_invoiced':_('1'),
-    #                'price_unit':unit_price,
-    #                'date_start': date_start,
-    #                'date_end': date_end, 
-    #                'category_id': category,
-    #                'caliber_id': caliber,    
-    #                 }
-
-    #        #price = self.env['wiz.search.product.line'].create(price_vals)
-    #        product_count = product_count + 1
-
-    #    message_lib = ("%s %s %s %s ") % ("Create Product for price list = (",self.pricelist_id.id, ") ", self.pricelist_id.name)
-        
-    #    #This function opens a window to create  products depending on the pricelist
-    #    try:
-    #        search_product_form_id = ir_model_data.get_object_reference('hubi', 'search_product_wizard_form')[1]
-            
-    #    except ValueError:
-    #        search_product_form_id = False
-    #    ctx = {
-    #        'default_model': 'sale.order',
-    #        'default_res_id': self.ids[0],
-    #        'default_order_id':self.id,
-    #        'default_pricelist_id':self.pricelist_id.id
-    #        ,'default_message':message_lib
-    #    }    
-        
-    #    return {
-    #        'type': 'ir.actions.act_window',
-    #        'view_type': 'form',
-    #        'view_mode': 'tree,form',
-    #        'res_model': 'wiz.search.product',
-    #        'views': [(search_product_form_id, 'form')],
-    #        'view_id': search_product_form_id,
-    #        'target': 'new',
-    #        'context': ctx,
-
-    #    }
      
     @api.multi
     def action_print_label(self):
-        #sale_order_ids = self.env['sale.order'].browse(self._context.get('active_ids', []))
-        #sale_order_ids = self.id
-        #res = sale_order_ids.load_order_line()
-        
-        
-        #res = self.env['sale.order.line'].search([('order_id', '=', self.id)])
-        
         sale_order_ids = self.env['wiz_sale_order_print_label'].browse(self._ids)
         res = sale_order_ids.load_order_line('order')
         
         if len(res) >= 1:
             action = self.env.ref('hubi.action_wiz_sale_order_print_label_tree').read()[0]
             action['domain'] = [('id', 'in', res)]
-        
-            
+         
         return action  
 
-     
+    @api.one
+    @api.depends('company_id')
+    def _calcul_lot(self):
+        val_calcul_lot = 'M'
+        settings = self.env['hubi.general_settings'].search([('name','=', 'General Settings'), ('company_id','=', self.company_id.id)])
+        for settings_vals in settings:
+            if settings_vals.calcul_lot:
+                val_calcul_lot = settings_vals.calcul_lot
+        self.calcul_lot = val_calcul_lot
         
+
     #shipper_id = fields.Many2one('hubi.shipper', string='Shipper')
     pallet_number = fields.Integer(string = 'Number of pallet')
     comment = fields.Text(string='Comment')
     #order_reference = fields.Char(string='Order Reference')
     sending_date = fields.Date(string="Sending Date", default=lambda self: fields.Date.today())   
     packaging_date = fields.Date(string="Packaging Date", default=lambda self: fields.Date.today())   
+    calcul_lot = fields.Text(string="Batch Number Calculation", store=False, compute='_calcul_lot')
+    periodicity_invoice = fields.Selection(string="Invoice Period", related='partner_id.periodicity_invoice')#,store=True)
+    invoice_grouping = fields.Boolean(string="Invoice grouping", related='partner_id.invoice_grouping')#,store=True)
+
+
 
     @api.multi
     @api.onchange('partner_id')
@@ -352,9 +326,7 @@ class HubiSaleOrder(models.Model):
             return
     
         values = { 
-            'carrier_id' : self.partner_id.carrier_id and self.partner_id.carrier_id.id \
-            or self.partner_id.property_delivery_carrier_id and self.partner_id.property_delivery_carrier_id.id \
-            or False
+            'carrier_id' : self.partner_id.carrier_id and self.partner_id.carrier_id.id or False
             }
 
         #if self.partner_id.shipper_id:
@@ -427,7 +399,7 @@ class HubiSaleOrder(models.Model):
                     dateorder=fields.Date.from_string(order.date_order).strftime('%d/%m/%Y')
                     res = {
                         'name': 'BL no ' + order.name + ' du ' + dateorder,
-                        'sequence': 0,
+                        'sequence':0,
                         'origin': order.name,
                         'price_unit': 0,
                         'quantity': 0,
@@ -435,6 +407,7 @@ class HubiSaleOrder(models.Model):
                         'layout_category_id':  False,
                         'account_id':  account_divers.property_account_income_categ_id.id or 630,
                     }
+                    #
                     res.update({'invoice_id': invoices[group_key].id })
                     inv_lines |= self.env['account.invoice.line'].create(res)   
                     
@@ -613,21 +586,35 @@ class HubiSaleOrder(models.Model):
     
     @api.multi                
     def update_sale_batch_number(self):
-        context = dict(self._context or {})
-        active_ids = context.get('active_ids', []) or []
-        _nolot =''
-        self.env.cr.commit()
+        if self.sending_date:
+            _nolot =''
+            self.env.cr.commit()
+            val_calcul_lot = 'M'
+            
+            settings = self.env['hubi.general_settings'].search([('name','=', 'General Settings'), ('company_id','=', self.company_id.id)])
+            for settings_vals in settings:
+                if settings_vals.calcul_lot:
+                    val_calcul_lot = settings_vals.calcul_lot
+
+            dateAAAAMMJJ=fields.Date.from_string(self.sending_date).strftime('%Y%m%d')
+            dateQQQ=fields.Date.from_string(self.sending_date).strftime('%Y%j')
         
-        sending_date = self.sending_date
-        dateQQQ = datetime.strftime(sending_date, '%Y%j').date()
-        dateAAAAMMJJ = datetime.strptime(sending_date, '%Y%m%d').date()
-        
-        _nolot = dateQQQ
-        
-        order_lines = self.env['sale.order.line'].browse(self._context.get('active_ids', []))
-        for line in order_lines:
-            line.write({'no_lot':_nolot})
-        
-        
+            if val_calcul_lot=='AQ': 
+                _nolot = dateQQQ
+            else:
+                if val_calcul_lot=='AMJ': 
+                    _nolot = dateAAAAMMJJ
+            
+            if _nolot !='':
+                order_lines = self.env['sale.order.line'].search([('order_id', '=', self.id)])
+                for line in order_lines:
+                    line.write({'no_lot':_nolot})
         
         return {'type': 'ir.actions.act_window_close'}
+    
+ 
+    @api.onchange('sending_date')
+    def onchange_sending_date(self):
+        if self.calcul_lot != 'M':
+            self.update_sale_batch_number()
+            

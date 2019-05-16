@@ -125,7 +125,8 @@ class Wizard_create_invoice_period(models.TransientModel):
    
     @api.multi
     def create_invoice_period(self):  
-        query_args = {'periodicity_invoice': self.periodicity_invoice,'date_start' : self.date_start,'date_end' : self.date_end}
+        date_fin = datetime.strptime(self.date_end, "%Y-%m-%d")  + timedelta(hours=25) + timedelta(minutes=59) + timedelta(seconds=59)
+        query_args = {'periodicity_invoice': self.periodicity_invoice,'date_start' : self.date_start,'date_end' : date_fin}
         query = """ SELECT  sale_order.id 
                         FROM sale_order 
                         INNER JOIN res_partner on res_partner.id = sale_order.partner_id 

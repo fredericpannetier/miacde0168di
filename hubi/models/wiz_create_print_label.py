@@ -154,7 +154,16 @@ class Wizard_create_print_label(models.TransientModel):
                     self.label_id =  modele_partner 
                 elif modele_prod:
                     self.label_id = modele_prod    
-        
+    
+    @api.depends('product_id', 'packaging_date', 'partner_id')
+    def _compute_dluo(self):
+        if self.packaging_date and self.product_id.id:
+            if self.partner_id.dlc_number_day and self.partner_id.dlc_number_day>0:
+                val_nb_day=self.partner_id.dlc_number_day
+            else:    
+                val_nb_day=self.product_id.categ_id.nb_day_dluo or 7
+            val_calcul_dluo = fields.Date.from_string(self.packaging_date) + timedelta(days=val_nb_day)
+            self.date_dluo = val_calcul_dluo
                
     packaging_date = fields.Date(string="Packaging date",default=lambda self: fields.Date.today())
     sending_date = fields.Date(string="Sending date",default=lambda self: fields.Date.today())
@@ -185,6 +194,7 @@ class Wizard_create_print_label(models.TransientModel):
                                     ("#FFC0CB", "pink")], string='Color Etiq')
     #carrier_id = fields.Integer(string="Carrier ID")
     carrier_id = fields.Many2one('delivery.carrier', 'Carrier ID')
+    date_dluo = fields.Date(string="DLUO Date", store=True, compute='_compute_dluo')
     message = fields.Text(string="Information")
    
     @api.multi

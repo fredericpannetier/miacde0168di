@@ -223,7 +223,7 @@ def prepareprintlabel(self, nom_table, id_table):
                     l.with_ean128, etab.compteur_ean128, etab.id, dc.name,
                     t.statistics_alpha_1, t.statistics_alpha_2,t.statistics_alpha_3,t.statistics_alpha_4,t.statistics_alpha_5,
                     pt.statistics_alpha_1, pt.statistics_alpha_2,pt.statistics_alpha_3,pt.statistics_alpha_4,pt.statistics_alpha_5
-                    , pt.etiq_country1, pt.etiq_country2
+                    , pt.etiq_country1, pt.etiq_country2, sl.date_dluo
                     FROM """ + nom_table + """ sl
                     LEFT JOIN hubi_printer p ON sl.printer_id = p.id 
                     LEFT JOIN hubi_labelmodel l ON sl.label_id = l.id
@@ -242,9 +242,16 @@ def prepareprintlabel(self, nom_table, id_table):
 
         self.env.cr.execute(query)
         
-        result = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41]) for r in self.env.cr.fetchall()]
+        result = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], \
+                    r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], \
+                    r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], \
+                    r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42]) \
+                  for r in self.env.cr.fetchall()]
         
-        for packaging_date,sending_date,product_description,category_name,caliber_name,packaging_name,etiq_mention,code_barre,code128,qte, pds,nb_mini,printerName,adressip,labelFile,clientname1,clientname2,numsanitaire,etabexp1,etabexp2,etab_mention,lot,color,etiq_latin, etiq_spanish,product_name,with_ean128,compteur_ean128, etab_id, carrier_name, c_st1, c_st2, c_st3, c_st4, c_st5, p_st1, p_st2, p_st3, p_st4, p_st5,etiq_country1,etiq_country2 in result:
+        for packaging_date,sending_date,product_description,category_name,caliber_name,packaging_name,etiq_mention,code_barre,code128,qte, pds, \
+        nb_mini,printerName,adressip,labelFile,clientname1,clientname2,numsanitaire,etabexp1,etabexp2,etab_mention,\
+        lot,color,etiq_latin, etiq_spanish,product_name,with_ean128,compteur_ean128, etab_id, carrier_name, c_st1, \
+        c_st2, c_st3, c_st4, c_st5, p_st1, p_st2, p_st3, p_st4, p_st5,etiq_country1,etiq_country2, date_dluo in result:
             if (product_description is not None):
                 description_item = product_description
             else:
@@ -276,6 +283,7 @@ def prepareprintlabel(self, nom_table, id_table):
                 ("etab2", etabexp2),
                 ("lot", lot),
                 ("color", color),
+                ("date_dlc", date_dluo),
                 
                 ("sale_packaging_date",packaging_date),
                 ("sale_sending_date",sending_date),

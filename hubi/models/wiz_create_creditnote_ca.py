@@ -96,8 +96,9 @@ class Wizard_prepare_creditnote_ca(models.TransientModel):
     def prepare_creditnote_ca(self):  
         self._cr.execute("DELETE FROM wiz_creditnote WHERE create_uid=%s", (self.env.user.id,))
         self.env.cr.commit()
-        
-        query_args = {'periodicity_creditnote': self.periodicity_creditnote,'date_start' : self.date_start,'date_end' : self.date_end, 'company_id' : self.env.user.company_id.id}
+        date_fin = datetime.strptime(self.date_end, "%Y-%m-%d")  + timedelta(hours=23) + timedelta(minutes=59) + timedelta(seconds=59)
+
+        query_args = {'periodicity_creditnote': self.periodicity_creditnote,'date_start' : self.date_start,'date_end' : date_fin, 'company_id' : self.env.user.company_id.id}
         query = """ SELECT  account_invoice.number, account_invoice.date_invoice,
                     CASE account_invoice.type WHEN  'out_refund' THEN 'A' ELSE 'F' END AS type_invoice ,
                     account_invoice.commercial_partner_id, account_invoice.partner_id,
