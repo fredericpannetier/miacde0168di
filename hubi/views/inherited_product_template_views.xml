@@ -270,6 +270,7 @@
                 <xpath expr="//field[@name='parent_id']" position="after">
                     <field name="reference"/>
                     <field name="shell"/>
+                    <field name="nb_day_dluo"/>
                     <field name="category_caliber_ids" nolabel="1">
                         <tree name="category_caliber" string="Category Caliber">
                             <field name="caliber_id"/>

@@ -8,6 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
                 <attribute name="editable"/>
+                <!--<attribute name="context">{'default_order' : id}</attribute>-->
+                <attribute name="default_order">id</attribute>
             </xpath>
         
             <xpath expr="//field[@name='user_id']" position="after">
@@ -104,7 +106,7 @@
     <record id="account.action_invoice_tree1" model="ir.actions.act_window">
         <field name="domain">[('type','in',['out_invoice', 'out_refund'])]</field>
     </record>
-    
+   
     <record id="hubi_account_invoice_line_form_view" model="ir.ui.view">
         <field name="name">hubi.account.invoice.form</field>
         <field name="model">account.invoice.line</field>
@@ -121,10 +123,10 @@
             </xpath>
             
             <xpath expr="//form/field[@name='name']" position="after">
-                <label for="comment : "/>
+                <label for="comment"/>
                 <field name="comment"/>
             </xpath>
-                 
+            
         </field>
     </record>
     

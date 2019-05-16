@@ -67,6 +67,7 @@
                 <field name="no_lot"/>
                 <field name="weight" readonly="1"/>
                 <field name="price_weight" readonly="1"/>
+                <field name="date_dluo" readonly="1"/>
             </xpath>
             
             <xpath expr="//field[@name='order_line']/form/field[@name='name']" position="after">
@@ -91,6 +92,7 @@
             
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                 <field name="no_lot" />
+                <field name="date_dluo" />
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
                 <field name="product_uom" invisible="1"/>
@@ -105,14 +107,17 @@
                     <label for="sending_date"/>
                     <div class="o_row">
                     <field name="sending_date" />
+                    
+                    <field name="calcul_lot" invisible = "1" />
                     <button
                         type="action"
                         name="%(action_wiz_confirm_dialog)d"
-                        class="btn-xs btn-link mb4 fa fa-lightbulb-o"
-                        attrs="{'invisible': True}"
+                        class="btn-link mb4 fa fa-lightbulb-o"
+                        attrs="{'invisible': [('calcul_lot', '=', 'M')]}"
                         context="{'default_confirm_message': 'Are you sure you want to update the batch number for the lines', 
                             'default_code_message': 'sale_batch-number'}"
                         />
+                        <!--  class="btn-xs btn-link mb4 fa fa-lightbulb-o" -->
                     </div>    
                     <field name="packaging_date"/>
                     <field name="pallet_number"/>
@@ -133,6 +138,25 @@
         </field>
     </record>
      
+    <record id="hubi_sale_order_tree_view" model="ir.ui.view">
+        <field name="name">hubi.sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+       
+            <xpath expr="//field[@name='confirmation_date']" position="replace"></xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="date_order"  string="Order Date" />
+                <field name="confirmation_date"  string="Confirmation Date"/>
+            </xpath>
+            <!-->
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="periodicity_invoice"  string="Invoice Period" />
+            </xpath>
+            -->
+        </field>
+    </record>
+         
     <record id="hubi_sale_order_form_search" model="ir.ui.view">
         <field name="name">hubi.sale.order.form.search</field>
         <field name="model">sale.order</field>
