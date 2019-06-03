@@ -122,7 +122,7 @@ class wizard_sale_order_print_label(models.Model):
                     LEFT JOIN product_pricelist_item linepl ON (pricelist.id = linepl.pricelist_id AND pt.id = linepl.product_tmpl_id)"""
 
         if origin == 'order':
-            query2 = """ WHERE o.id IN %s ORDER BY o.name """
+            query2 = """ WHERE pt.etiquette = true AND o.id IN %s ORDER BY o.name """
         else:
             query2 = """ WHERE ol.id IN %s ORDER BY o.name """
                 
@@ -186,8 +186,8 @@ class wizard_sale_order_print_label(models.Model):
                 for default in default_value:
                     if (printer is None):
                         printer = default.printer_id.id
-                    #if (etiq is None):
-                    #    etiq = default.label_model_id
+                    if (etiq is None):
+                        etiq = default.label_model_id.id
                     
             insert = {
             'sale_order_id': order_id,

@@ -137,7 +137,7 @@ class HubiSaleOrderLine(models.Model):
     done_packing = fields.Boolean(string='Packing Done')
     sending_date = fields.Date(string="Sending Date", store=False, compute='_compute_date_sending' )
     date_dluo = fields.Date(string="DLUO Date",store=True, compute='_compute_dluo')   
-
+    etiquette_product = fields.Boolean(string="Product label", related='product_id.etiquette')
    
     @api.multi
     def invoice_line_create(self, invoice_id, qty):

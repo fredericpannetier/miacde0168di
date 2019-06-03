@@ -42,6 +42,7 @@
                         <field name="path_account_transfer"/>
                         <field name="account_file_transfer"/>
                         <field name="writing_file_transfer"/>
+                        <field name="mail_accounting"/>
                     </group>
                 </group>
 

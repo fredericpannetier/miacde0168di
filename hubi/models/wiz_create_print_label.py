@@ -15,7 +15,7 @@ class Wizard_create_print_label(models.TransientModel):
     
     @api.onchange('category_id', 'caliber_id', 'packaging_id')
     def _onchange_product_ccp(self):
-        product_domain = [('sale_ok','=',True)]
+        product_domain = [('sale_ok','=',True),('etiquette', '=', True)]
         
         if self.category_id:
             product_domain = [('categ_id', '=', self.category_id.id)]+ product_domain[0:]

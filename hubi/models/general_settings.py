@@ -27,6 +27,7 @@ class HubiGeneralSettings(models.Model):
     writing_file_transfer = fields.Char(string='File For Writing Transfer')
     type_accounting = fields.Selection([('EBP', 'EBP')], string="Type of accounting", default='EBP')
     calcul_lot = fields.Selection([('M', 'Manual'), ('AMJ', 'Auto AAAAMMJJ'), ('AQ', 'Auto AAAAQQQ')], string="Batch Number Calculation", default='M')
+    mail_accounting = fields.Boolean(string="Send Email", default=True)
 
     _sql_constraints = [
         ('unique_name_company', 'unique(name, company_id)', 'Name must be unique for the company'),
@@ -52,6 +53,7 @@ class Wizard_GeneralSettings(models.TransientModel):
     writing_file_transfer = fields.Char(string='File For Writing Transfer', default=lambda self: self._get_values('writing_file_transfer'))
     type_accounting = fields.Selection([('EBP', 'EBP')], string="Type of accounting", default=lambda self: self._get_values('type_accounting'))
     calcul_lot = fields.Selection([('M', 'Manual'), ('AMJ', 'Auto AAAAMMJJ'), ('AQ', 'Auto AAAAQQQ')], string="Batch Number Calculation", default=lambda self: self._get_values('calcul_lot'))
+    mail_accounting = fields.Boolean(string="Send Email", default=lambda self: self._get_values('mail_accounting'))
 
     @api.model
     def _get_values(self, valeur):
@@ -72,6 +74,7 @@ class Wizard_GeneralSettings(models.TransientModel):
         val_writing_file_transfer = ''
         val_type_accounting = 'EBP'
         val_calcul_lot = 'M'
+        val_mail_accounting = False
         
         company_id = self.env['res.company']._company_default_get('hubi.general_settings')
         val_company_id =company_id.id 
@@ -96,6 +99,7 @@ class Wizard_GeneralSettings(models.TransientModel):
             val_writing_file_transfer = settings_vals.writing_file_transfer
             val_type_accounting = settings_vals.type_accounting
             val_calcul_lot = settings_vals.calcul_lot
+            val_mail_accounting = settings_vals.mail_accounting or False
             
         if valeur == 'name':
             retour = val_name   
@@ -138,7 +142,10 @@ class Wizard_GeneralSettings(models.TransientModel):
             
         if valeur == 'calcul_lot':
             retour = val_calcul_lot
-                        
+                     
+        if valeur == 'mail_accounting':
+            retour = val_mail_accounting
+                                    
         return retour
 
     @api.multi
@@ -158,7 +165,8 @@ class Wizard_GeneralSettings(models.TransientModel):
                 'account_file_transfer' : self.account_file_transfer,
                 'writing_file_transfer' : self.writing_file_transfer,
                 'type_accounting' : self.type_accounting,
-                'calcul_lot' : self.calcul_lot
+                'calcul_lot' : self.calcul_lot,
+                'mail_accounting' : self.mail_accounting
                 }
         #prepare_setting = self.env['hubi.general_settings'].write(_vals)
         #self.env.cr.commit()
@@ -178,7 +186,8 @@ class Wizard_GeneralSettings(models.TransientModel):
                     account_file_transfer = %s,
                     writing_file_transfer = %s,
                     type_accounting = %s,
-                    calcul_lot = %s  
+                    calcul_lot = %s,
+                    mail_accounting = %s  
                     WHERE name = %s AND company_id = %s
                            """
             
@@ -186,10 +195,10 @@ class Wizard_GeneralSettings(models.TransientModel):
             company =self.env['res.company']._company_default_get('hubi.general_settings')    
             query = """INSERT INTO hubi_general_settings 
                     ( auxiliary_accounting, root_account_auxiliary_customer, root_account_auxiliary_supplier, length_account_auxiliary, length_account_general, complete_0_account_auxiliary, complete_0_account_general, path_account_transfer, account_file_transfer, writing_file_transfer, type_accounting, calcul_lot, name, company_id) 
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         
         #try:                   
-        self.env.cr.execute(query,  (self.auxiliary_accounting, self.root_account_auxiliary_customer, self.root_account_auxiliary_supplier, self.length_account_auxiliary, self.length_account_general, self.complete_0_account_auxiliary, self.complete_0_account_general, self.path_account_transfer, self.account_file_transfer, self.writing_file_transfer,self.type_accounting, self.calcul_lot, self.name, self.company_id.id))
+        self.env.cr.execute(query,  (self.auxiliary_accounting, self.root_account_auxiliary_customer, self.root_account_auxiliary_supplier, self.length_account_auxiliary, self.length_account_general, self.complete_0_account_auxiliary, self.complete_0_account_general, self.path_account_transfer, self.account_file_transfer, self.writing_file_transfer,self.type_accounting, self.calcul_lot, self.mail_accounting, self.name, self.company_id.id))
         self.env.cr.commit()
         #except Exception as e:
         #    _logger.warning(

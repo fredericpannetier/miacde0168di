@@ -41,6 +41,8 @@
                         <field string="Path" name="path_account_transfer"/>
                         <field string="Account File" name="account_file_transfer"/>
                         <field string="Writing File" name="writing_file_transfer"/>
+                        <field string="Mail" name="mail_accounting"/>
+                        <field string="Retransfer" name="re_transfer"/>
                         <!--<field string="Mail model" name="template_id"/>-->
                     </group>
                 </group>
@@ -51,6 +53,19 @@
                     <button string="Send Mail" type="object" name="send_mail_template"
                         default_focus="1" class="oe_link"/>    
                     <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="wiz_transfert_compta_step2" model="ir.ui.view">
+        <field name="name">wiz.transfertcompta.form2</field>
+        <field name="model">wiz.transfertcompta</field>
+        <field name="arch" type="xml">
+            <form string="Create Price">
+                <field name="message" colspan="6" readonly="1" nolabel="1" />
+                <footer>
+                    <button string="OK" special="cancel" />
                 </footer>
             </form>
         </field>
